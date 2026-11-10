@@ -282,6 +282,36 @@ details.panel[open]>summary::after{transform:translateY(-30%) rotate(-135deg)}
 .pf-list{list-style:none;padding:0;margin:8px 0 14px}
 .pf-list li{margin:6px 0}
 
+/* ---------- Diagramas ---------- */
+.dg{margin:12px 0 4px}
+.dg-strip{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:8px}
+.dg-strip li p{margin:6px 0 0;font-size:13.5px;line-height:1.3;color:var(--ink-2)}
+.dg-strip li p b{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--pitch);color:#fff;font-size:12px;margin-right:4px}
+.dg-frame{background:#F4F8F5;border-radius:10px;overflow:hidden}
+.dg-frame svg,.dg-map svg,.dg-anim svg{display:block;width:100%;height:auto}
+.dg-map{border-radius:10px;overflow:hidden}
+.dg-anim{background:#F4F8F5;border-radius:12px;max-width:340px;margin:0 auto}
+.dg-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;font-size:13px;color:var(--muted)}
+.dg-legend i{display:inline-block;width:22px;height:0;vertical-align:middle;margin-right:5px;border-top:3px solid var(--bib)}
+.dg-legend .lg-jog,.dg-legend .lg-back{border-top:2px dashed #5F6F65}
+.dg-legend .lg-ball{border-top:3px dotted var(--ink)}
+.dg-legend .lg-pass{border-top:2px dashed #2F6FB5}
+.dg-legend .lg-me,.dg-legend .lg-mate,.dg-legend .lg-cone{width:12px;height:12px;border:0;border-radius:50%;background:var(--pitch)}
+.dg-legend .lg-mate{background:#fff;box-shadow:inset 0 0 0 2px var(--ink)}
+.dg-legend .lg-cone{background:var(--bib)}
+.dg-tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.thumb{flex:none;width:68px;height:58px;border:0;padding:0;border-radius:10px;background:#F4F8F5;overflow:hidden;cursor:pointer;display:grid;place-items:center}
+.thumb svg{width:100%;height:100%}
+.item-top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.item-top>div{min-width:0}
+.vids{border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
+.vids h3{font:800 22px/1.1 var(--disp);margin:0 0 6px}
+.vq{background:var(--bg);border-radius:10px;padding:10px 12px;margin:10px 0 0;font-size:15px}
+.vq b{display:block;font-size:16px;margin:2px 0 8px}
+.vq button{border:0;background:var(--pitch);color:#fff;border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer;min-height:36px}
+.lib-list li{display:flex;align-items:center;gap:10px}
+.lib-list li .thumb{width:56px;height:48px}
+@media (max-width:420px){.dg-strip li p{font-size:12.5px}.thumb{width:60px;height:52px}}
 #toast{position:fixed;left:50%;bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 16px);transform:translate(-50%,16px);
   background:var(--ink);color:#fff;padding:11px 16px;border-radius:12px;font-weight:700;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
@@ -302,6 +332,7 @@ details.panel[open]>summary::after{transform:translateY(-30%) rotate(-135deg)}
 <div id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="imp" accept="application/json,.json" hidden>
 
+<script src="diagramas.js"></script>
 <script>
 'use strict';
 /* ===================================================================
@@ -806,10 +837,12 @@ function itemHTML(x, L){
     boxes += `<button class="box" data-a="box" data-k="${key}" data-i="${i}" ${R.rs?`data-rs="${R.rs}"`:''} aria-pressed="${on}" aria-label="${esc(E.n)}, serie ${i+1} de ${R.sets}">${I.check}</button>`;
   }
   const rest = R.rs ? `<button class="rest" data-a="timer" data-s="${R.rs}" aria-label="Iniciar descanso de ${esc(R.rest)}">${I.clock}${esc(R.rest)}</button>` : '';
+  const th = window.DIAG && DIAG.has(R.exId) ? `<button class="thumb" data-a="ex" data-id="${R.exId}" aria-label="Ver cómo se hace ${esc(E.n)}">${DIAG.thumb(R.exId)}</button>` : '';
   return `<div class="item${n>=R.sets?' done':''}">
+    <div class="item-top"><div>
     <button class="ex-name" data-a="ex" data-id="${R.exId}">${esc(E.n)}</button>${R.opt?' <span class="opt-tag">opcional</span>':''}
     <div class="rx">${esc(R.text)}${R.lv?`<span class="lv">${esc(R.lv)}</span>`:''}</div>
-    ${E.alt?`<div class="alt">${esc(E.alt)}</div>`:''}
+    ${E.alt?`<div class="alt">${esc(E.alt)}</div>`:''}</div>${th}</div>
     <div class="boxes">${boxes}${rest}</div></div>`;
 }
 
@@ -993,7 +1026,7 @@ function viewGuide(){
   const days = ORDER.map(d => `<li><b>${SHORT[d]}</b><span><strong>${esc(DAYS[d].title)}.</strong> ${esc(DAYS[d].goal)}</span></li>`).join('');
   const lib = Object.entries(EX).filter(([k]) => !k.startsWith('tt_'))
     .sort((a,b) => a[1].n.localeCompare(b[1].n, 'es'))
-    .map(([k,e]) => `<li data-name="${esc((e.n+' '+e.g).toLowerCase())}"><button data-a="ex" data-id="${k}">${esc(e.n)}<small>${esc(e.g)}</small></button></li>`).join('');
+    .map(([k,e]) => `<li data-name="${esc((e.n+' '+e.g).toLowerCase())}">${window.DIAG && DIAG.has(k) ? `<button class="thumb" data-a="ex" data-id="${k}" aria-hidden="true" tabindex="-1">${DIAG.thumb(k)}</button>` : '<span class="thumb" aria-hidden="true"></span>'}<button data-a="ex" data-id="${k}">${esc(e.n)}<small>${esc(e.g)}</small></button></li>`).join('');
   return `<h1 class="title">Guía</h1>
   <details class="panel sec" open><summary>Así funciona tu semana</summary><div class="dbody">
     <p>Todo gira alrededor del partido del domingo. Lo más intenso queda a cuatro días del partido y el sábado solo activa.</p>
@@ -1037,6 +1070,7 @@ function viewGuide(){
       <li><a href="https://coachsci.sdsu.edu/csa/vol101/helgeru1.htm" target="_blank" rel="noopener">Helgerud y cols., entrenamiento aeróbico en futbol (2001)</a></li></ol></div></details>
 
   <details class="panel sec"><summary>Ejercicios</summary><div class="dbody">
+    <p>Cada ejercicio trae dibujo paso a paso, animación y la búsqueda exacta para encontrar videos en YouTube.</p>
     <label class="field"><span class="sr">Buscar ejercicio</span><input type="search" id="exsearch" placeholder="Buscar: salto, isquios, sprint…"></label>
     <ul class="lib-list" id="lib">${lib}</ul></div></details>
 
@@ -1094,22 +1128,44 @@ function openSheet(html){
   const f = s.querySelector('.x'); if (f) f.focus();
 }
 function closeSheet(){
+  if (stopAnim){ stopAnim(); stopAnim = null; }
   $('#sheet').hidden = true;
   document.body.style.overflow = '';
   S.delArm = false;
 }
+const yt = q => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+let stopAnim = null;
+function dgHTML(id){
+  if (!window.DIAG || !DIAG.has(id)) return '';
+  const n = (DIAG.strip(id).match(/<li>/g) || []).length || 1;
+  return `<div class="dg" id="dg" style="--n:${Math.max(n,1)}">${DIAG.strip(id)}</div>
+    ${DIAG.canAnimate(id) ? `<div class="dg-tools"><button class="btn ghost" data-a="anim" data-id="${id}" aria-pressed="false">Ver en movimiento</button></div>` : ''}`;
+}
+function toggleAnim(btn){
+  const id = btn.dataset.id, box = $('#dg');
+  if (stopAnim){ stopAnim(); stopAnim = null; box.innerHTML = DIAG.strip(id); btn.textContent = 'Ver en movimiento'; btn.setAttribute('aria-pressed','false'); return; }
+  box.innerHTML = '<div class="dg-anim" role="img" aria-label="Animación del ejercicio"></div>';
+  stopAnim = DIAG.animate(box.firstChild, id);
+  btn.textContent = 'Ver por pasos'; btn.setAttribute('aria-pressed','true');
+}
 function openEx(id){
   const e = EX[id]; if (!e) return;
-  const q = encodeURIComponent(e.q || (e.n + ' técnica'));
+  const v = (window.DIAG && DIAG.video(id)) || [e.q || (e.n + ' técnica'), e.q || (e.n + ' technique')];
   openSheet(`<div class="sheet-top"><h2 id="sheet-title">${esc(e.n)}</h2><button class="x" data-a="close" aria-label="Cerrar">${I.x}</button></div>
     <p class="lead">${esc(e.g)}</p>
+    ${dgHTML(id)}
     <ol class="steps">${e.c.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
     ${e.w ? `<div class="callout"><b>Ojo</b>${esc(e.w)}</div>` : ''}
     ${e.e ? `<div class="callout"><b>Error común</b>${esc(e.e)}</div>` : ''}
     ${e.f ? `<div class="callout easy"><b>Más fácil</b>${esc(e.f)}</div>` : ''}
     ${e.d ? `<div class="callout hard"><b>Más difícil</b>${esc(e.d)}</div>` : ''}
     ${e.alt ? `<p class="alt">${esc(e.alt)}</p>` : ''}
-    <div class="btns"><a class="btn ghost" href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">Ver videos de referencia</a></div>`);
+    <section class="vids"><h3>Videos de referencia</h3>
+      <p>Elige un video donde el movimiento se vea igual que en el dibujo.</p>
+      <div class="btns"><a class="btn" href="${yt(v[0])}" target="_blank" rel="noopener">Buscar en YouTube</a>
+        <a class="btn ghost" href="${yt(v[1])}" target="_blank" rel="noopener">Más videos (en inglés)</a></div>
+      <p class="vq">Si el link no abre, escribe esto en el buscador de YouTube:<b>${esc(v[0])}</b>
+        <button data-a="copyq" data-q="${esc(v[0])}">Copiar búsqueda</button></p></section>`);
 }
 function profileSheet(p){
   const others = Object.values(DB.profiles).filter(x => x.id !== p.id);
@@ -1348,6 +1404,8 @@ document.addEventListener('click', e => {
     case 't-add': T.end += 15000; T.total += 15; if (!T.int){ $('#timer').classList.remove('fin'); T.int = setInterval(tick, 250); } tick(); break;
     case 't-stop': stopTimer(); break;
     case 'ex': openEx(t.dataset.id); break;
+    case 'anim': toggleAnim(t); break;
+    case 'copyq': navigator.clipboard && navigator.clipboard.writeText(t.dataset.q).then(() => toast('Búsqueda copiada'), () => toast('Selecciona el texto y cópialo')); break;
     case 'close': closeSheet(); break;
     case 'ready': setReady(p, t.dataset.f, +t.dataset.v); break;
     case 'rpe': setRpe(p, +t.dataset.v); break;

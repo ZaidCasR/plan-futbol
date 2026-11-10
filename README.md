@@ -7,6 +7,7 @@ App web para entrenar de lunes a sábado pensando en el partido del domingo: pli
 | Archivo | Para qué sirve |
 |---|---|
 | `index.html` | La app completa |
+| `diagramas.js` | Dibujos paso a paso, animaciones y búsquedas de YouTube de cada ejercicio |
 | `manifest.webmanifest`, `icon-*.png`, `apple-touch-icon.png` | Permiten instalarla en la pantalla de inicio |
 | `sw.js` | Hace que abra sin señal en la cancha |
 | `bsd-800.woff2`, `bsd-900.woff2`, `ah-400.woff2`, `ah-700.woff2` | Tipografías (Big Shoulders Display y Atkinson Hyperlegible, licencia SIL OFL 1.1) |

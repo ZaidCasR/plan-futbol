@@ -1,7 +1,7 @@
 // Permite abrir la app sin señal en la cancha. Primero intenta la red (para recibir
 // actualizaciones) y, si no hay conexión, usa la copia guardada.
-const CACHE = 'plan-futbol-v1';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png',
+const CACHE = 'plan-futbol-v2';
+const ASSETS = ['./', './index.html', './diagramas.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png',
   './bsd-800.woff2', './bsd-900.woff2', './ah-400.woff2', './ah-700.woff2'];
 
 self.addEventListener('install', e => {
