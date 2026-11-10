@@ -1,0 +1,1401 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17643A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Plan Futbol">
+<meta name="description" content="Plan de pliometría, velocidad y resistencia para futbol, de lunes a sábado, pensado para el partido del domingo.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Plan Futbol</title>
+<style>
+/* Tipografías incluidas en el proyecto (licencia SIL OFL): funcionan sin internet */
+@font-face{font-family:'Big Shoulders Display';font-weight:800;font-display:swap;src:url(bsd-800.woff2) format('woff2')}
+@font-face{font-family:'Big Shoulders Display';font-weight:900;font-display:swap;src:url(bsd-900.woff2) format('woff2')}
+@font-face{font-family:'Atkinson Hyperlegible';font-weight:400;font-display:swap;src:url(ah-400.woff2) format('woff2')}
+@font-face{font-family:'Atkinson Hyperlegible';font-weight:700;font-display:swap;src:url(ah-700.woff2) format('woff2')}
+:root{
+  --pitch:#17643A; --pitch-dk:#0E4526; --pitch-lt:#E2EFE5;
+  --chalk:#FFFFFF; --bg:#EDF2EE; --panel:#FFFFFF;
+  --ink:#14231A; --ink-2:#3B4D42; --muted:#5F6F65; --line:#D2DCD5;
+  --bib:#FF7A1F; --bib-ink:#6E2C00; --bib-lt:#FFE8D6;
+  --warn-lt:#FFF3CC; --warn-ink:#5A4100;
+  --stop:#C8202F; --stop-lt:#FCE3E5; --stop-ink:#760E17;
+  --r:14px;
+  --disp:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --tabh:64px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);
+  padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 28px)}
+button{font:inherit;color:inherit}
+a{color:var(--pitch)}
+:focus-visible{outline:3px solid var(--bib);outline-offset:2px}
+[hidden]{display:none!important}
+body.timing{padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 110px)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Cancha (encabezado) ---------- */
+.pitch{position:relative;overflow:hidden;color:var(--chalk);
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 46px,transparent 46px 92px),var(--pitch);
+  padding-top:env(safe-area-inset-top)}
+.pitch::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.42;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 260'><g fill='none' stroke='white' stroke-width='3'><circle cx='130' cy='130' r='86'/><line x1='130' y1='-10' x2='130' y2='270'/></g><circle cx='130' cy='130' r='5' fill='white'/></svg>") no-repeat right -96px top -34px/270px}
+.head{position:relative;max-width:560px;margin:0 auto;padding:16px 16px 12px}
+.dorsal{position:absolute;right:10px;top:-14px;font:900 170px/1 var(--disp);letter-spacing:-3px;
+  color:rgba(255,255,255,.13);pointer-events:none;user-select:none}
+@supports (-webkit-text-stroke:2px white){.dorsal{color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.55)}}
+.team{font-weight:700;font-size:15px;opacity:.85;margin:0}
+.who{display:block;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:var(--chalk);position:relative}
+.who-name{display:block;font:800 46px/.95 var(--disp);margin-top:4px;max-width:70%;overflow-wrap:anywhere}
+.who-meta{display:block;font-size:15px;opacity:.92;margin-top:4px}
+.who-meta u{text-decoration-thickness:1px;text-underline-offset:3px}
+.wkline{display:flex;align-items:center;gap:8px;margin-top:12px;position:relative}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;font-size:14px;font-weight:700;background:rgba(255,255,255,.15);border:0;color:var(--chalk)}
+.pill.bib{background:var(--bib);color:#2B1000}
+.wk-txt{display:flex;flex-direction:column;line-height:1.15;min-width:0;padding:0 4px}
+.wk-txt b{font:800 23px/1 var(--disp)}
+.wk-txt span{font-size:14px;opacity:.92}
+.navbtn{width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:var(--chalk);cursor:pointer;display:grid;place-items:center;padding:0}
+.navbtn svg{width:18px;height:18px}
+.pill.link{cursor:pointer;margin-left:auto;white-space:nowrap}
+.days{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;max-width:560px;margin:0 auto;padding:4px 12px 14px}
+.day{border:0;border-radius:10px;padding:8px 1px 6px;background:rgba(255,255,255,.1);color:var(--chalk);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;min-height:66px;position:relative}
+.day b{font:800 19px/1 var(--disp)}
+.day small{font-size:10.5px;line-height:1.1;opacity:.88}
+.day .dk{width:16px;height:16px;border-radius:50%;display:grid;place-items:center}
+.day .dk svg{width:12px;height:12px}
+.day.done .dk{background:var(--chalk)}
+.day.done .dk svg{stroke:var(--pitch)}
+.day[aria-current="true"]{background:var(--chalk);color:var(--pitch-dk)}
+.day[aria-current="true"].done .dk{background:var(--pitch)}
+.day[aria-current="true"].done .dk svg{stroke:#fff}
+.day.today::after{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--bib)}
+
+/* ---------- Contenido ---------- */
+main{max-width:560px;margin:0 auto;padding:18px 16px 0}
+.date{color:var(--muted);font-size:15px;margin:0}
+h1.title{font:800 40px/1 var(--disp);margin:2px 0 8px;letter-spacing:.2px}
+.goal{margin:0 0 12px;color:var(--ink-2)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--panel);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;color:var(--ink-2)}
+button.chip{cursor:pointer;min-height:36px}
+button.chip[aria-pressed="true"]{border-color:var(--pitch);background:var(--pitch-lt);color:var(--pitch-dk)}
+.notice{border-radius:12px;padding:12px 14px;margin:0 0 14px;background:var(--warn-lt);color:var(--warn-ink)}
+.notice.green{background:var(--pitch-lt);color:var(--pitch-dk)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:0 0 16px}
+.panel h2,.block h2,.sec h2{font:800 25px/1.05 var(--disp);margin:0 0 8px}
+.panel p:last-child{margin-bottom:0}
+.q{font-weight:700;font-size:15px;margin:10px 0 4px}
+.q:first-of-type{margin-top:0}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 4px;font-size:14px;line-height:1.2;cursor:pointer;min-height:46px}
+.seg button[aria-pressed="true"]{border-color:var(--pitch);background:var(--pitch-lt);font-weight:700;color:var(--pitch-dk)}
+.seg button.b1[aria-pressed="true"]{border-color:#C79A00;background:var(--warn-lt);color:var(--warn-ink)}
+.seg button.b2[aria-pressed="true"]{border-color:var(--stop);background:var(--stop-lt);color:var(--stop-ink)}
+.verdict{border-radius:10px;padding:10px 12px;margin-top:12px;font-weight:700}
+.v-ok{background:var(--pitch-lt);color:var(--pitch-dk)}
+.v-warn{background:var(--warn-lt);color:var(--warn-ink)}
+.v-stop{background:var(--stop-lt);color:var(--stop-ink)}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 2px;cursor:pointer}
+.switch span b{display:block}
+.switch span small{color:var(--muted);font-size:14px}
+.switch input{appearance:none;-webkit-appearance:none;width:52px;height:32px;border-radius:999px;background:#C5D0C8;position:relative;flex:none;cursor:pointer;margin:0;transition:background .18s}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:transform .18s}
+.switch input:checked{background:var(--pitch)}
+.switch input:checked::after{transform:translateX(20px)}
+
+.block{margin:0 0 18px}
+.block h2 small{font:400 14px var(--body);color:var(--muted);margin-left:6px}
+.list{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.item{padding:14px;border-top:1px solid var(--line);position:relative}
+.item:first-child{border-top:0}
+.item.done{background:linear-gradient(90deg,var(--pitch) 0 4px,transparent 4px)}
+.ex-name{background:none;border:0;padding:0;text-align:left;font-weight:700;font-size:17px;line-height:1.3;cursor:pointer;
+  text-decoration:underline;text-decoration-color:#AFC0B4;text-decoration-thickness:2px;text-underline-offset:4px}
+.opt-tag{font-size:13px;color:var(--muted)}
+.rx{color:var(--ink-2);margin-top:3px}
+.lv{display:inline-block;font-size:13px;font-weight:700;background:var(--pitch-lt);color:var(--pitch-dk);border-radius:6px;padding:1px 8px;margin-left:4px}
+.alt{font-size:14px;color:var(--muted);margin-top:4px}
+.boxes{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.box{width:42px;height:42px;border-radius:9px;border:2px solid #9AAEA1;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0}
+.box svg{width:22px;height:22px;opacity:0}
+.box[aria-pressed="true"]{background:var(--pitch);border-color:var(--pitch)}
+.box[aria-pressed="true"] svg{opacity:1}
+.rest{margin-left:auto;border:0;background:var(--bib-lt);color:var(--bib-ink);border-radius:999px;padding:8px 13px;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;min-height:42px}
+.rest svg{width:16px;height:16px}
+
+.finish{background:var(--pitch-dk);color:var(--chalk);border-radius:var(--r);padding:16px;margin:22px 0 10px}
+.finish h2{font:800 28px/1 var(--disp);margin:0 0 4px}
+.finish p{margin:0 0 12px;opacity:.9}
+.rpe{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.rpe button{aspect-ratio:1/1.15;border:0;border-radius:8px;background:rgba(255,255,255,.13);color:#fff;font:800 20px var(--disp);cursor:pointer;padding:0}
+.rpe button[aria-pressed="true"]{background:var(--bib);color:#2B1000}
+.rpe-txt{min-height:24px;margin:8px 0 2px;font-size:15px}
+.finish .field span{color:var(--chalk)}
+.finish input,.finish textarea{border-color:transparent}
+.saved{font-size:14px;margin-top:10px;opacity:.9}
+
+.field{display:block;margin:12px 0}
+.field>span{display:block;font-size:14px;font-weight:700;margin-bottom:5px}
+input[type=number],input[type=text],input[type=date],input[type=url],input[type=search],textarea,select{
+  width:100%;font:inherit;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--ink);min-height:46px}
+textarea{min-height:70px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-size:16px;cursor:pointer;min-height:50px;background:var(--pitch);color:#fff;text-decoration:none;text-align:center}
+.btn.bib{background:var(--bib);color:#2B1000}
+.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.btn.danger{background:var(--stop-lt);color:var(--stop-ink)}
+.btn.full{width:100%}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btns .btn{flex:1 1 140px}
+
+/* ---------- Alta de jugador ---------- */
+.setup-head .head{padding-bottom:22px}
+.setup-head h1{font:900 54px/.92 var(--disp);margin:6px 0 8px;max-width:9ch}
+.setup-head p{margin:0;max-width:34ch;opacity:.92}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice.one{grid-template-columns:1fr}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:12px;text-align:left;cursor:pointer;min-height:52px}
+.opt b{display:block}
+.opt span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.opt[aria-pressed="true"]{border-color:var(--pitch);background:var(--pitch-lt);box-shadow:inset 0 0 0 1px var(--pitch)}
+.err{color:var(--stop-ink);font-weight:700;margin:10px 0 0}
+
+/* ---------- Progreso ---------- */
+.big{font:800 34px/1 var(--disp)}
+.sum{font-size:18px;line-height:1.45;margin:0 0 6px}
+.sum b{font:800 26px/1 var(--disp)}
+.cyc-row{display:grid;grid-template-columns:40px repeat(7,1fr);gap:5px;align-items:center;margin:4px 0}
+.cyc-row.hd span{font-size:12px;color:var(--muted);text-align:center}
+.cyc-row .wl{font-size:13px;font-weight:700;color:var(--ink-2)}
+.cell{aspect-ratio:1;border-radius:8px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.cell svg{width:14px;height:14px}
+.cell.done{background:var(--pitch);border-color:var(--pitch)}
+.cell.part{background:linear-gradient(135deg,var(--pitch-lt) 50%,#fff 50%);border-color:var(--pitch)}
+.cell.miss{border-style:dashed;border-color:#AEBDB3}
+.cell.fut{opacity:.5}
+.cell.today{outline:3px solid var(--bib);outline-offset:1px}
+.cell.cur-wk{}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:4px;border:2px solid var(--line);vertical-align:-2px;margin-right:5px}
+.legend .l-done{background:var(--pitch);border-color:var(--pitch)}
+.legend .l-part{background:linear-gradient(135deg,var(--pitch-lt) 50%,#fff 50%);border-color:var(--pitch)}
+.legend .l-miss{border-style:dashed;border-color:#AEBDB3}
+table.t{width:100%;border-collapse:collapse}
+.t th,.t td{padding:9px 6px;border-top:1px solid var(--line);text-align:left;font-size:15px;vertical-align:middle}
+.t thead th{border-top:0;font-size:13px;color:var(--muted);font-weight:700}
+.t input{min-height:42px;padding:6px 8px;max-width:88px}
+.t .how{background:none;border:0;padding:0;font-weight:700;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:#AFC0B4;text-underline-offset:3px}
+.t small{color:var(--muted)}
+.delta{font-weight:700}
+.test{border-top:1px solid var(--line);padding:12px 0}
+.test:first-child{border-top:0;padding-top:4px}
+.test small{color:var(--muted)}
+.test .how{background:none;border:0;padding:0;font-weight:700;font-size:17px;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:#AFC0B4;text-decoration-thickness:2px;text-underline-offset:4px}
+.test-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:end;margin-top:8px}
+.test-row label span{display:block;font-size:13px;color:var(--muted);font-weight:700;margin-bottom:3px}
+.delta-cell{padding-bottom:11px;font-size:15px;line-height:1.2}
+.delta.good{color:var(--pitch)}
+.delta.bad{color:var(--stop)}
+.hist{list-style:none;margin:0;padding:0}
+.hist li{border-top:1px solid var(--line)}
+.hist li:first-child{border-top:0}
+.hist button{display:flex;justify-content:space-between;gap:12px;width:100%;background:none;border:0;padding:10px 0;text-align:left;cursor:pointer}
+.hist small{color:var(--muted);display:block}
+.hist .ld{font:800 20px var(--disp);white-space:nowrap}
+
+/* ---------- Equipo ---------- */
+.share-box{white-space:pre-wrap;background:var(--bg);border-radius:10px;padding:12px;font-size:15px}
+.board .me{background:var(--pitch-lt)}
+.board td:first-child{font:800 20px var(--disp);width:34px}
+
+/* ---------- Guía ---------- */
+.sec{margin:0 0 12px}
+details.panel{padding:0}
+details.panel>summary{list-style:none;cursor:pointer;padding:14px 44px 14px 14px;position:relative;font:800 24px/1.1 var(--disp)}
+details.panel>summary::-webkit-details-marker{display:none}
+details.panel>summary::after{content:"";position:absolute;right:16px;top:50%;width:10px;height:10px;border-right:3px solid var(--ink-2);border-bottom:3px solid var(--ink-2);transform:translateY(-70%) rotate(45deg);transition:transform .15s}
+details.panel[open]>summary::after{transform:translateY(-30%) rotate(-135deg)}
+.dbody{padding:0 14px 14px}
+.dbody ul,.dbody ol{padding-left:20px;margin:6px 0}
+.dbody li{margin:5px 0}
+.week-list{list-style:none;padding:0!important}
+.week-list li{display:grid;grid-template-columns:62px 1fr;gap:10px;border-top:1px solid var(--line);padding:9px 0;margin:0!important}
+.week-list li:first-child{border-top:0}
+.week-list b{font:800 20px/1.1 var(--disp)}
+.gl dt{font-weight:700;margin-top:10px}
+.gl dd{margin:2px 0 0}
+.rpe-t td{padding:5px 6px}
+.lib-list{list-style:none;padding:0!important;margin:10px 0 0!important}
+.lib-list li{border-top:1px solid var(--line);margin:0!important}
+.lib-list button{width:100%;text-align:left;background:none;border:0;padding:10px 0;cursor:pointer}
+.lib-list button small{display:block;color:var(--muted)}
+.src{font-size:14px}
+.src li{margin:7px 0}
+
+/* ---------- Barra de pestañas ---------- */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tab{border:0;background:none;padding:8px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12.5px;color:var(--muted);cursor:pointer;min-height:var(--tabh)}
+.tab svg{width:25px;height:25px}
+.tab[aria-current="page"]{color:var(--pitch);font-weight:700}
+
+/* ---------- Reloj de descanso ---------- */
+#timer{position:fixed;left:12px;right:12px;z-index:30;bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 10px);
+  max-width:536px;margin:0 auto;background:var(--bib);color:#2B1000;border-radius:16px;padding:10px 10px 10px 16px;
+  display:flex;align-items:center;gap:10px;box-shadow:0 10px 28px rgba(20,35,26,.25)}
+#t-num{font:900 42px/1 var(--disp);min-width:84px;font-variant-numeric:tabular-nums}
+#t-lab{font-size:13px;font-weight:700;display:block}
+#t-bar{height:6px;background:rgba(0,0,0,.15);border-radius:3px;overflow:hidden;margin-top:4px}
+#t-bar i{display:block;height:100%;background:#2B1000;width:100%}
+#timer .grow{flex:1;min-width:0}
+#timer button{border:0;border-radius:10px;background:rgba(0,0,0,.12);color:#2B1000;font-weight:700;padding:0 12px;min-height:44px;cursor:pointer}
+#timer.fin{background:var(--pitch);color:#fff}
+#timer.fin button{color:#fff;background:rgba(255,255,255,.18)}
+#timer.fin #t-bar i{background:#fff}
+
+/* ---------- Hoja inferior ---------- */
+#sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,28,16,.5)}
+.sheet-in{background:#fff;width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:20px 20px 0 0;
+  padding:18px 18px calc(24px + env(safe-area-inset-bottom));animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:.5}to{transform:none;opacity:1}}
+.sheet-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sheet-in h2{font:800 32px/1 var(--disp);margin:0 0 6px}
+.x{border:0;background:var(--bg);width:44px;height:44px;border-radius:50%;cursor:pointer;flex:none;display:grid;place-items:center}
+.x svg{width:20px;height:20px}
+.lead{color:var(--ink-2);margin:4px 0 10px}
+.steps{padding-left:22px;margin:8px 0}
+.steps li{margin:7px 0}
+.callout{border-left:4px solid var(--stop);background:var(--stop-lt);padding:10px 12px;border-radius:0 10px 10px 0;margin:12px 0}
+.callout.easy{border-color:var(--pitch);background:var(--pitch-lt)}
+.callout.hard{border-color:var(--bib);background:var(--bib-lt)}
+.callout b{display:block}
+.pf-list{list-style:none;padding:0;margin:8px 0 14px}
+.pf-list li{margin:6px 0}
+
+#toast{position:fixed;left:50%;bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 16px);transform:translate(-50%,16px);
+  background:var(--ink);color:#fff;padding:11px 16px;border-radius:12px;font-weight:700;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (min-width:700px){.who-name{font-size:56px}.dorsal{font-size:200px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="timer" hidden role="timer" aria-live="off">
+  <div id="t-num">0:00</div>
+  <div class="grow"><span id="t-lab">Descanso</span><div id="t-bar"><i></i></div></div>
+  <button data-a="t-add" aria-label="Agregar 15 segundos">+15 s</button>
+  <button data-a="t-stop">Cerrar</button>
+</div>
+<div id="sheet" hidden><div class="sheet-in" role="dialog" aria-modal="true" aria-labelledby="sheet-title"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="imp" accept="application/json,.json" hidden>
+
+<script>
+'use strict';
+/* ===================================================================
+   CONFIGURACIÓN DEL EQUIPO — edita estas tres líneas
+   =================================================================== */
+const CONFIG = {
+  TEAM_NAME: 'Nuestro equipo',      // aparece arriba de cada pantalla
+  SYNC_URL: '',                      // URL del Apps Script (opcional, para el tablero del equipo)
+  SYNC_KEY: 'cambia-esta-clave'      // misma clave que en apps-script.gs
+};
+
+/* ===================== Catálogos ===================== */
+const POS = {
+  portero:{n:'Portero'}, central:{n:'Defensa central'}, lateral:{n:'Lateral'},
+  medio:{n:'Medio'}, extremo:{n:'Extremo'}, delantero:{n:'Delantero'}
+};
+const LEVELS = {
+  base:{n:'Inicial', i:0, d:'Entrenas 0 o 1 días aparte del partido, o regresas de una pausa.'},
+  int:{n:'Intermedio', i:1, d:'Entrenas 2 o 3 días por semana desde hace meses.'},
+  alto:{n:'Avanzado', i:2, d:'Entrenas 4 o más días y dominas saltos y fuerza con buena técnica.'}
+};
+const WEEKS = [
+  {n:1, name:'Adaptación y pruebas', f:.75, ph:1, test:true},
+  {n:2, name:'Construcción', f:1, ph:1},
+  {n:3, name:'Carga', f:1.15, ph:1},
+  {n:4, name:'Descarga', f:.6, ph:1},
+  {n:5, name:'Reactividad', f:1, ph:2},
+  {n:6, name:'Carga', f:1.1, ph:2},
+  {n:7, name:'Pico', f:1.2, ph:2},
+  {n:8, name:'Descarga y pruebas', f:.6, ph:2, test:true}
+];
+const ORDER = [1,2,3,4,5,6,0];
+const SHORT = {1:'Lun',2:'Mar',3:'Mié',4:'Jue',5:'Vie',6:'Sáb',0:'Dom'};
+const FOCUS = {1:'Recupera',2:'Fuerza',3:'Potencia',4:'Resiste',5:'Velocidad',6:'Activa',0:'Partido'};
+
+/* ===================== Ejercicios =====================
+   n nombre · g para qué sirve · c cómo hacerlo · e error común
+   f más fácil · d más difícil · alt sin equipo · w aviso       */
+const EX = {
+  calent:{n:'Calentamiento dinámico (FIFA 11+)', g:'Sube la temperatura y prepara cadera, rodillas y tobillos para saltar y correr.',
+    c:['Trote suave 2 minutos, ida y vuelta.','Trote abriendo la cadera (rodilla hacia afuera) y luego cerrándola, una ida y vuelta de cada uno.','Desplazamiento lateral y carioca, una ida y vuelta.','Skipping suave y talones al glúteo, una ida y vuelta.','6 balanceos de pierna adelante y atrás, y 6 de lado, por pierna.','5 estocadas caminando con giro de tronco por lado.','2 carreras progresivas de 30 m, una al 60% y otra al 80%.'],
+    e:'Saltarlo o hacerlo en dos minutos. Saltar en frío es la forma más fácil de lastimarte.', f:'Si hace frío, alarga el trote a 4 minutos.', q:'FIFA 11+ calentamiento parte 1'},
+  trote_z2:{n:'Trote suave, bici o alberca', g:'Mover sangre a las piernas sin cansarlas.',
+    c:['Ritmo en el que puedas platicar con frases completas.','Si las piernas están muy cargadas del partido, mejor bici o alberca.','Respira por la nariz la mayor parte del tiempo.'],
+    e:'Convertirlo en un entrenamiento duro. Hoy se recupera, no se suma.', f:'Caminata rápida de 15 minutos.'},
+  cadera_9090:{n:'90/90 de cadera', g:'Rotación de cadera para golpear, girar y cuidar la ingle.',
+    c:['Siéntate con las dos rodillas dobladas a 90°: una pierna al frente y la otra al lado.','Pecho alto; inclínate sobre la pierna de adelante sin redondear la espalda.','Gira las dos rodillas al otro lado, sin manos si puedes.'],
+    e:'Redondear la espalda para llegar más abajo.', f:'Apoya las manos atrás.', d:'Sin manos y con pausa de 3 s en cada lado.', q:'90 90 hip mobility'},
+  wgs:{n:'Estocada con giro de tronco', g:'Abre flexores de cadera, aductores y espalda alta en un solo movimiento.',
+    c:['Paso largo al frente; apoya la mano del mismo lado en el piso, por dentro del pie.','Lleva el codo hacia el tobillo.','Gira el pecho y sube ese brazo al cielo, siguiendo la mano con la mirada.','Regresa y cambia de lado.'],
+    e:'Dar un paso corto y perder el equilibrio.', f:'Apoya la rodilla de atrás en el piso.', q:'worlds greatest stretch'},
+  tobillo_pared:{n:'Rodilla a la pared', g:'Movilidad de tobillo: aterrizas y frenas mejor, y cargas menos la rodilla.',
+    c:['Pie a unos 10 cm de la pared, talón pegado al piso.','Lleva la rodilla a tocar la pared, alineada con el dedo medio del pie.','Si tocas sin despegar el talón, aleja el pie 1 cm y repite.','La distancia máxima del dedo gordo a la pared es tu prueba de tobillo.'],
+    e:'Que la rodilla se vaya hacia adentro o que se levante el talón.', q:'knee to wall ankle mobility test'},
+  flexor:{n:'Estiramiento de flexor de cadera', g:'Suelta la cadera que se acorta con el sprint y con estar sentado.',
+    c:['Rodilla de atrás en el piso sobre algo suave; pie de adelante plano.','Aprieta el glúteo de la pierna de atrás y lleva la cadera hacia adelante.','Sube el brazo del lado de atrás para sentirlo más.'],
+    e:'Arquear la espalda en lugar de mover la cadera.'},
+  puente:{n:'Puente de glúteo', g:'Activa glúteos para proteger espalda baja e isquios.',
+    c:['Boca arriba, rodillas dobladas y pies a la altura de la cadera.','Empuja con los talones hasta alinear rodillas, cadera y hombros.','Aprieta 2 s arriba y baja lento.'],
+    e:'Arquear la espalda baja en lugar de subir con el glúteo.', d:'A una pierna.'},
+  gato:{n:'Gato-camello', g:'Movilidad suave de la columna.',
+    c:['En cuatro puntos: manos bajo hombros y rodillas bajo cadera.','Redondea la espalda mirando al ombligo; luego arquea mirando al frente.','Lento, siguiendo la respiración.'], e:'Hacerlo rápido.'},
+  foam:{n:'Rodillo de espuma', g:'Alivia la sensación de carga después del partido.',
+    c:['Cuádriceps, isquios, gemelos y glúteo: 45 a 60 s cada uno.','Presión cómoda, sin dolor fuerte.','No pases el rodillo por la rodilla ni por detrás de ella.'],
+    f:'Sin rodillo: una pelota o una botella.', q:'foam roller piernas futbol'},
+  pogos:{n:'Saltos de tobillo (pogos)', g:'Elasticidad: entrena el tendón de Aquiles como resorte para arrancar y frenar.',
+    c:['Piernas casi estiradas; el rebote sale del tobillo, no de la rodilla.','Contacto corto con la parte delantera del pie, sin que el talón toque el piso.','Brazos relajados, ritmo constante y poco ruido.'],
+    e:'Doblar mucho las rodillas o caer con todo el pie: deja de ser elástico.', f:'Más bajito y más lento.', d:'Hacia adelante, hacia los lados o a una pierna.', q:'pogo jumps tecnica'},
+  snapdown:{n:'Caída y frena', g:'Aprender a aterrizar. Es la base de todos los saltos.',
+    c:['De puntas y con los brazos arriba, baja los brazos de golpe y cae en media sentadilla.','Pies a la altura de la cadera, rodillas alineadas con la punta de los pies.','Congela 2 s: cadera atrás, pecho al frente, sin ruido.'],
+    e:'Rodillas hacia adentro o caer con las piernas rectas.', d:'Desde un escalón de 20 a 30 cm.', q:'snap down drill landing'},
+  box_jump:{n:'Salto al cajón', g:'Potencia vertical con poco impacto al aterrizar.',
+    c:['Cajón, banca firme o escalón a una altura que domines (a la rodilla está bien).','Contramovimiento rápido con los brazos y salta.','Cae suave arriba, en la misma postura del despegue, no en sentadilla profunda.','Baja caminando, nunca saltando hacia atrás.'],
+    e:'Subir la altura para presumir: si aterrizas en sentadilla profunda, está demasiado alto.', f:'Salto vertical en el lugar con aterrizaje controlado.', d:'Desde sentado en una banca, o a una pierna.',
+    alt:'Sin cajón: escalón firme o banca de parque.', q:'box jump tecnica'},
+  broad_pausa:{n:'Salto largo con pausa', g:'Potencia horizontal: la fuerza de tus primeros pasos.',
+    c:['Pies a la altura de la cadera, brazos atrás.','Salta lejos y un poco hacia arriba, como si pasaras una valla.','Aterriza y congela 2 s antes de regresar caminando.'],
+    e:'Caer con el pecho muy adelante o con las rodillas hacia adentro.', f:'Salta al 70% de tu distancia.', d:'Triple salto continuo.', q:'broad jump stick landing'},
+  triple:{n:'Triple salto largo continuo', g:'Potencia horizontal encadenada, como en la carrera.',
+    c:['Tres saltos largos seguidos con los dos pies.','Contacto rápido entre saltos y brazos coordinados.','Congela el último aterrizaje.'],
+    e:'Perder la postura en el segundo salto. Si pasa, regresa al salto con pausa.', f:'Salto largo con pausa.', q:'triple broad jump'},
+  skater_pausa:{n:'Salto de patinador con pausa', g:'Potencia lateral y control de rodilla en los cambios de dirección.',
+    c:['Sobre una pierna, empuja hacia un lado y cae sobre la otra.','Congela 2 s: rodilla sobre el pie, cadera atrás.','Empuja de regreso.'],
+    e:'Que la rodilla se vaya hacia adentro al caer.', f:'Distancia corta y toca el piso con el otro pie.', d:'Sin pausa (patinador reactivo).', q:'skater jump stick'},
+  skater_reac:{n:'Patinador reactivo', g:'Cambios de dirección explosivos.',
+    c:['Igual que el patinador con pausa, pero rebotas en cuanto caes.','Contacto corto; empuja con toda la pierna.','Mantén la cadera a la misma altura.'],
+    e:'Rebotar con la rodilla hacia adentro.', f:'Patinador con pausa.', q:'skater bounds reactive'},
+  hop_1p:{n:'Salto a una pierna con pausa', g:'Potencia y estabilidad de una pierna, como al cabecear o arrancar.',
+    c:['Sobre una pierna, salta hacia adelante una distancia corta.','Cae en la misma pierna y congela 2 s.','Rodilla alineada con el pie y cadera nivelada.'],
+    e:'Buscar distancia sin control. Primero domina la caída; luego aumenta la distancia.', f:'Salto de patinador con pausa.', q:'single leg hop and stick'},
+  vallas:{n:'Saltos rápidos sobre vallas bajas', g:'Reactividad: tocar el piso lo menos posible.',
+    c:['5 o 6 vallas o conos de 15 a 20 cm, separados un paso.','Pies juntos; rebota de tobillo con los brazos activos.','Contactos cortos y silenciosos.'],
+    e:'Vallas altas que te obligan a doblar mucho las rodillas.', f:'Líneas en el piso en lugar de vallas.', d:'A una pierna (solo avanzados).',
+    alt:'Sin vallas: conos, botellas o líneas.', q:'mini hurdle hops'},
+  linea_lat:{n:'Saltos laterales sobre una línea', g:'Pies rápidos y reactividad lateral.',
+    c:['Pies juntos al lado de una línea.','Salta de lado a lado lo más rápido posible, con contactos cortos.','Tronco quieto: el movimiento sale de los tobillos.'],
+    e:'Saltar alto y lento.', d:'A una pierna.'},
+  power_skip:{n:'Skip de potencia', g:'Potencia con menos impacto que los saltos a una pierna.',
+    c:['Skip con impulso: rodilla arriba y brazo contrario al cielo.','Busca altura, no velocidad.','Aterriza suave en la parte delantera del pie.'],
+    e:'Hacerlo rápido y bajito.', q:'power skips'},
+  arrancada10:{n:'Arrancadas de 10 m', g:'Aceleración: los primeros pasos deciden quién llega primero al balón.',
+    c:['Cambia la salida en cada repetición: de pie, cayendo hacia adelante, de espaldas y girando, desde el piso.','Cuerpo inclinado, pasos cortos y potentes; empuja el piso hacia atrás.','Brazos fuertes, de la cadera a la cara.','Regresa caminando: descanso completo.'],
+    e:'Levantar el pecho en el primer paso o dar zancadas largas.', d:'En subida suave.', q:'acceleration drills soccer'},
+  drill505:{n:'5-10-5', g:'Cambio de dirección de 180°.',
+    c:['Tres conos en línea, separados 5 m.','Desde el centro: corre 5 m a un lado, toca la línea, corre 10 m al otro lado, toca, y regresa al centro.','Baja la cadera antes de frenar; frena con el pie de afuera.'],
+    e:'Frenar de pie con pasos largos, que carga la rodilla.', q:'5-10-5 pro agility drill'},
+  desacel:{n:'Sprint y frena', g:'Frenar fuerte y seguro. La mitad del juego es desacelerar.',
+    c:['Sprint de 10 m y frena en 3 pasos o menos.','Baja la cadera, pasos cortos, pies por delante del cuerpo.','Congela 2 s al final en postura atlética.'],
+    e:'Frenar con un solo paso largo y la pierna recta.', f:'Sprint al 70% y frena en 5 pasos.', q:'deceleration drill soccer'},
+  zigzag:{n:'Zig-zag de conos', g:'Cambios de dirección a 45° a velocidad de partido.',
+    c:['5 conos en zig-zag, separados 5 m.','Ataca cada cono bajando la cadera y empujando con el pie de afuera.','Mira al frente, no al piso.'],
+    e:'Rodear los conos en curva amplia en lugar de cortar.', f:'Al 70%.', d:'Con balón.'},
+  skipA:{n:'Skipping A', g:'Técnica de carrera: rodilla al frente y pie debajo de la cadera.',
+    c:['Rodilla a la altura de la cadera, punta del pie hacia arriba.','Pisa debajo de la cadera con la parte delantera del pie.','Brazos a 90°, ritmo rápido.'],
+    e:'Echarse hacia atrás.', q:'A skip drill'},
+  sprint20:{n:'Sprint de 20 m desde parado', g:'Aceleración completa.',
+    c:['Salida de pie, un pie adelante.','Primeros pasos cortos e inclinados; ve levantando el cuerpo poco a poco.','Descanso completo entre repeticiones.'],
+    e:'Repetir con poco descanso: se vuelve resistencia, no velocidad.'},
+  sprint_lanz:{n:'Sprint lanzado', g:'Velocidad máxima, para ganar la espalda o regresar a defender.',
+    c:['Acelera poco a poco durante 10 m y corre los siguientes 20 m al máximo.','Relaja cara y hombros a máxima velocidad.','Descansa 3 minutos entre repeticiones.'],
+    e:'Correr tenso, con la mandíbula apretada.', q:'flying sprint drill'},
+  reaccion:{n:'Reacción al compañero (espejo)', g:'Agilidad con decisión: reaccionar a otro jugador.',
+    c:['Frente a un compañero, entre dos conos a 5 m.','Él se mueve y tú lo copias lo más rápido posible durante 5 s.','Cambien de rol.'],
+    e:'Adivinar en lugar de reaccionar.', f:'Sin compañero: reacciona a una señal del celular o a una moneda que sueltas.', q:'mirror drill agility'},
+  acel_suave:{n:'Aceleraciones progresivas', g:'Despierta las piernas sin cansarlas.',
+    c:['20 m subiendo poco a poco hasta el 85 o 90%.','Regresa caminando.','Debes terminar con más energía que al empezar.']},
+  hiit4x4:{n:'Intervalos 4 × 4', g:'Resistencia: correr más metros y repetir más sprints en el partido.',
+    c:['4 minutos a ritmo muy duro: solo puedes decir 2 o 3 palabras (90 a 95% de tu frecuencia máxima si usas reloj).','3 minutos de trote suave entre series.','Ritmo parejo: la última serie igual que la primera.','Sin cancha: alberca, bici o una subida.'],
+    e:'Salir a tope y morir en la segunda serie.', f:'Series de 3 minutos.', d:'Conduciendo balón en un circuito.', q:'4x4 interval training Helgerud'},
+  comp:{n:'Bloque compensatorio', g:'Si jugaste poco, recupera el estímulo de velocidad y resistencia que te dio el partido a los demás.',
+    c:['3 series de 3 minutos a ritmo duro, con 2 minutos de trote entre series.','Después, 6 sprints de 20 m con 1 minuto de descanso.','Solo si no jugaste o jugaste menos de 45 minutos.'],
+    e:'Hacerlo si jugaste el partido completo.'},
+  sentadilla:{n:'Sentadilla (barra, mancuerna o mochila)', g:'Fuerza máxima: más fuerza es más potencia en cada salto y arrancada.',
+    c:['Pies a la altura de los hombros, puntas un poco abiertas.','Baja controlado hasta donde mantengas la espalda neutra (muslo paralelo o más).','Sube rápido, con intención.','Peso pesado, pero que podrías hacer 2 repeticiones más.'],
+    e:'Rodillas hacia adentro al subir.', f:'Sentadilla goblet con una mancuerna.', d:'Más peso con la misma técnica.',
+    alt:'Sin gimnasio: sentadilla búlgara con mochila, 8 por pierna.', q:'sentadilla tecnica'},
+  rdl1p:{n:'Peso muerto rumano a una pierna', g:'Isquios y equilibrio: protege la parte de atrás del muslo.',
+    c:['Sobre una pierna, con la rodilla un poco doblada.','Inclina el tronco y lleva la otra pierna hacia atrás, como una sola pieza.','Baja hasta sentir el isquio, espalda recta, y sube apretando el glúteo.'],
+    e:'Abrir la cadera hacia un lado o redondear la espalda.', f:'Con una mano apoyada en la pared.', d:'Con mancuerna.',
+    alt:'Sin pesas: con mochila, bajando en 3 s.', q:'single leg romanian deadlift'},
+  hip_thrust:{n:'Hip thrust', g:'Glúteo fuerte: más potencia en el sprint y menos carga para los isquios.',
+    c:['Espalda alta apoyada en una banca, pies firmes.','Sube la cadera hasta alinearla con rodillas y hombros, mentón al pecho.','Pausa 2 s arriba y baja controlado.'],
+    e:'Arquear la espalda baja.', f:'Puente de glúteo en el piso.', d:'Con barra, o a una pierna con peso.',
+    alt:'Sin gimnasio: puente a una pierna en el piso, 12 por pierna.', q:'hip thrust tecnica'},
+  talones1p:{n:'Elevación de talones a una pierna', g:'Gemelo y sóleo: el motor de la elasticidad y la protección del Aquiles.',
+    c:['En un escalón, sobre la parte delantera de un pie.','Sube lo más alto posible, pausa 1 s y baja lento por debajo del escalón.','Haz unas series con la rodilla estirada y otras un poco doblada.'],
+    e:'Rebotar rápido sin rango completo.', f:'Con dos pies.', d:'Con mancuerna.', q:'single leg calf raise'},
+  nordico:{n:'Nórdico de isquios', g:'Los programas que incluyen este ejercicio reducen a la mitad las lesiones de isquios.',
+    c:['De rodillas sobre algo suave; un compañero te sujeta los tobillos.','Cuerpo recto de rodillas a cabeza, glúteo apretado.','Déjate caer hacia adelante lo más lento posible, frenando con los isquios.','Cuando ya no puedas frenar, cae con las manos y regresa empujando el piso.'],
+    e:'Doblar la cadera (sentarte) para no trabajar el isquio.', f:'Baja solo un tercio del recorrido.', d:'Baja más y regresa sin empujar con las manos.',
+    alt:'Sin compañero: engancha los talones bajo un sillón pesado o una barra baja.',
+    w:'Las primeras dos semanas da agujetas fuertes. No lo hagas a menos de 3 días del partido.', q:'nordic hamstring curl tecnica'},
+  copenhague:{n:'Copenhague (aductores)', g:'Aductores fuertes: este ejercicio redujo 41% los problemas de ingle en futbolistas.',
+    c:['Plancha de lado sobre el codo, con la pierna de arriba apoyada en una banca.','Nivel 1: rodilla apoyada. Nivel 2: pantorrilla apoyada. Nivel 3: pie apoyado.','Sube la cadera apretando la pierna de arriba contra la banca; la de abajo sube a tocarla.','Baja en 3 s.'],
+    e:'Empezar en el nivel 3 o con muchas repeticiones. Se empieza con 5.', f:'Nivel 1, o plancha lateral normal.', d:'El siguiente nivel.',
+    alt:'Sin banca: un sillón, una silla firme o la mano de un compañero.', q:'copenhagen adduction exercise'},
+  deadbug:{n:'Dead bug', g:'Core que controla la pelvis al correr y patear.',
+    c:['Boca arriba, brazos al techo y rodillas a 90°.','Pega la espalda baja al piso y no la despegues.','Estira lento un brazo y la pierna contraria, y regresa.'],
+    e:'Que la espalda se despegue del piso.', q:'dead bug exercise'},
+  plancha_lat:{n:'Plancha lateral', g:'Estabilidad de tronco y cadera para choques y giros.',
+    c:['Codo debajo del hombro, cuerpo en línea.','Cadera alta, sin dejarla caer.','Respira normal.'], e:'Dejar caer la cadera.', f:'Con las rodillas apoyadas.'},
+  balon:{n:'Toques y rondo con balón', g:'Coordinación y sensación de balón antes del partido.',
+    c:['Toques, pases cortos a la pared o rondo 4 contra 1.','Intensidad baja a media, muchas acciones con el balón.','Termina con ganas de jugar.']},
+  calent_partido:{n:'Calentamiento antes del partido', g:'El FIFA 11+ redujo cerca de 39% las lesiones cuando se hace siempre.',
+    c:['Trote con aperturas de cadera, desplazamiento lateral y carioca (3 min).','Estocadas, sentadillas y saltos suaves (3 min).','Pases y control con balón (3 min).','3 aceleraciones de 20 m al 80 o 90% y 2 cambios de dirección.'],
+    e:'Llegar justo y entrar en frío.', q:'FIFA 11+ warm up'},
+  enfriamiento:{n:'Después del partido', g:'La recuperación para el lunes empieza aquí.',
+    c:['Trote suave o caminata de 5 minutos.','Agua, y en la primera hora algo con proteína y carbohidrato (licuado, tacos de pollo, sándwich).','Duerme bien: es la mejor recuperación que existe.']},
+
+  /* --- Pruebas --- */
+  tt_cmj:{n:'Prueba de salto vertical', g:'Mide tu potencia de piernas.',
+    c:['De pie junto a una pared, estira el brazo y marca tu alcance.','Hazlo siempre igual: manos a la cadera, o un brazo libre para marcar.','Salta con contramovimiento y marca lo más alto. La diferencia es tu salto.','Anota el mejor de 3 intentos. También sirve una app de salto.']},
+  tt_30:{n:'Prueba de sprint de 30 m', g:'Mide aceleración y velocidad.',
+    c:['Mide 30 m con cinta o con las líneas de la cancha.','Alguien cronometra desde tu primer movimiento, o grábate en cámara lenta.','Anota el mejor de 2 intentos, con 3 min de descanso.','Mismo calzado y superficie cada vez.']},
+  tt_505:{n:'Prueba 5-10-5', g:'Mide cambio de dirección.',
+    c:['Tres conos en línea, separados 5 m.','Desde el centro: 5 m a un lado, toca la línea, 10 m al otro lado, toca, y regresa al centro.','Anota el mejor de 2 intentos por lado.']},
+
+  /* --- Por posición --- */
+  p_por_mie:{n:'Salto lateral explosivo de portero', g:'Llegar a los balones de los costados con un primer empuje potente.',
+    c:['Postura de portero: pies a la altura de los hombros, peso adelante, manos listas.','Empuja con la pierna contraria y salta de lado lo más lejos posible con los brazos extendidos.','Cae en los pies y congela 2 s. Con colchoneta o pasto blando puedes completar la caída lateral.'],
+    e:'Dar un paso falso hacia atrás antes de saltar.', f:'Distancia corta, caída en dos pies.', d:'Con balón lanzado por un compañero.'},
+  p_por_jue:{n:'Desplazamientos y reacción de portero', g:'Ajustes cortos de posición antes del tiro.',
+    c:['Un compañero señala la dirección: lateral, adelante o atrás.','Pasos cortos sin cruzar los pies, durante 10 s.','Termina cada repetición con una estirada o un salto a atrapar.']},
+  p_por_vie:{n:'Reflejos con balón soltado', g:'Reacción ante rebotes y desvíos.',
+    c:['Un compañero detrás de ti suelta o lanza el balón a un lado.','Reacciona y atrapa o desvía en cuanto lo veas.','Sin compañero: lanza el balón a una pared irregular y reacciona al rebote.']},
+  p_cen_mie:{n:'Salto de cabeceo con carrera', g:'Ganar el balón aéreo.',
+    c:['Tres pasos de carrera y despega con una pierna.','Rodilla de la otra pierna arriba y brazos para ganar altura y protegerte.','Cae con los dos pies, suave y con las rodillas alineadas.'],
+    e:'Caer con una pierna rígida.', f:'Salto vertical a dos pies.', d:'Con balón colgado o lanzado.'},
+  p_cen_jue:{n:'Atrás, giro de cadera y sprint', g:'Defender la espalda cuando el delantero arranca.',
+    c:['Carrera hacia atrás 5 m en postura baja.','A la señal, abre la cadera hacia un lado sin cruzar los pies.','Sprint de 15 m.'], e:'Girar dando la espalda al balón.'},
+  p_cen_vie:{n:'Duelo de reacción 1 contra 1', g:'Leer y seguir al atacante.',
+    c:['El atacante amaga y sale hacia un cono a 5 m.','Tú reaccionas y llegas antes o al mismo tiempo.','Cambien de rol.']},
+  p_lat_mie:{n:'Patinador y arrancada', g:'Pasar del cambio de dirección al sprint por la banda.',
+    c:['Salto de patinador con pausa.','Al caer, arranca 10 m hacia adelante.','Regresa caminando.']},
+  p_lat_jue:{n:'Sprints repetidos', g:'Subir y bajar la banda una y otra vez.',
+    c:['6 sprints de 30 m.','Solo 20 s de descanso entre sprints, trotando de regreso.','Intenta que el último se parezca al primero.']},
+  p_lat_vie:{n:'Sprint de 30 m y centro', g:'Llegar a línea de fondo y centrar con calidad.',
+    c:['Corre o conduce 30 m al máximo por la banda.','Centra a un área marcada o a un compañero.','Descanso completo.']},
+  p_med_mie:{n:'Giro de 180° y arrancada', g:'Recibir de espaldas, girar y salir.',
+    c:['De espaldas a la dirección de salida, en postura atlética.','A la señal, gira sobre la parte delantera de los pies y arranca 10 m.','Alterna el lado del giro.']},
+  p_med_jue:{n:'Perfilarse, recibir y salir', g:'Escanear antes de recibir para jugar más rápido.',
+    c:['Antes de que llegue el pase, mira por encima de los dos hombros.','Recibe con control orientado hacia el espacio libre.','Conduce 10 m a buena velocidad.']},
+  p_med_vie:{n:'Cambios de ritmo', g:'Romper líneas con un acelerón.',
+    c:['10 s de trote y 5 s de sprint, sin parar.','4 repeticiones seguidas forman una serie.','2 minutos de descanso entre series.']},
+  p_ext_mie:{n:'Salida en curva', g:'Desbordar por fuera sin perder velocidad.',
+    c:['Marca una curva con 4 o 5 conos, como si rodearas al lateral.','Acelera inclinando el cuerpo hacia adentro de la curva.','Pasos cortos en la entrada y largos a la salida.']},
+  p_ext_jue:{n:'1 contra 1 de cambio de dirección', g:'Ganarle al defensa con un cambio de dirección.',
+    c:['Conduce hacia un cono a velocidad media.','A 2 m, amaga y cambia a 45° o a 90°.','Acelera 10 m después del cambio.']},
+  p_ext_vie:{n:'Amago y arrancada', g:'Salir hacia el lado contrario del defensa.',
+    c:['Amago corto con el cuerpo, sin balón.','Arrancada de 10 m hacia el lado contrario.','Descanso completo.']},
+  p_del_mie:{n:'Salto de cabeceo y arrancada', g:'Atacar el balón aéreo y seguir la jugada.',
+    c:['Salto vertical a dos pies con los brazos.','Al caer, arranca 5 m.','Regresa caminando.']},
+  p_del_jue:{n:'Desmarque: amago y arrancada', g:'Ganar el espacio a la espalda del defensa.',
+    c:['Trota hacia el balón y amaga recibir.','Gira y arranca 10 m en diagonal.','Trota de regreso.']},
+  p_del_vie:{n:'Arrancada y remate', g:'Definir después de un esfuerzo máximo.',
+    c:['Arrancada de 10 m hacia el balón.','Remata a portería o a un blanco.','Precisión primero, potencia después.']}
+};
+
+/* Bloques por posición (miércoles, jueves, viernes) */
+const POSD = {
+  portero:{
+    mie:{ex:'p_por_mie', s:[2,3,3], r:'4 por lado', n:4, side:true, rest:'60 s', rs:60},
+    jue:{ex:'p_por_jue', unit:'rep', s:[4,6,6], r:'de 10 s', rest:'30 s', rs:30},
+    vie:{ex:'p_por_vie', unit:'rep', s:[6,8,10], r:'', rest:'20 s', rs:20}},
+  central:{
+    mie:{ex:'p_cen_mie', s:[2,3,3], r:'4', n:4, rest:'60 s', rs:60},
+    jue:{ex:'p_cen_jue', unit:'rep', s:[4,6,6], r:'alternando lado', rest:'45 s', rs:45},
+    vie:{ex:'p_cen_vie', unit:'rep', s:[4,5,6], r:'de 5 s', rest:'40 s', rs:40}},
+  lateral:{
+    mie:{ex:'p_lat_mie', s:[2,3,3], r:'3 por lado', n:3, side:true, rest:'60 s', rs:60},
+    jue:{ex:'p_lat_jue', unit:'serie', s:[1,1,2], r:'de 6 sprints de 30 m', rest:'3 min', rs:180},
+    vie:{ex:'p_lat_vie', unit:'rep', s:[4,5,6], r:'', rest:'90 s', rs:90}},
+  medio:{
+    mie:{ex:'p_med_mie', unit:'rep', s:[6,8,10], r:'alternando lado', rest:'45 s', rs:45},
+    jue:{ex:'p_med_jue', unit:'rep', s:[6,8,10], r:'', rest:'20 s', rs:20},
+    vie:{ex:'p_med_vie', unit:'serie', s:[1,2,2], r:'de 4 cambios', rest:'2 min', rs:120}},
+  extremo:{
+    mie:{ex:'p_ext_mie', unit:'rep', s:[3,4,4], r:'por lado, de 20 m', rest:'60 s', rs:60},
+    jue:{ex:'p_ext_jue', unit:'rep', s:[4,6,8], r:'alternando lado', rest:'40 s', rs:40},
+    vie:{ex:'p_ext_vie', unit:'rep', s:[4,5,6], r:'de 10 m', rest:'45 s', rs:45}},
+  delantero:{
+    mie:{ex:'p_del_mie', s:[2,3,3], r:'4', n:4, rest:'60 s', rs:60},
+    jue:{ex:'p_del_jue', unit:'rep', s:[6,8,8], r:'', rest:'40 s', rs:40},
+    vie:{ex:'p_del_vie', unit:'rep', s:[5,6,8], r:'', rest:'45 s', rs:45}}
+};
+
+/* ===================== La semana =====================
+   s series por nivel [inicial, intermedio, avanzado]
+   r repeticiones (o [fase 1, fase 2]) · n saltos por serie
+   ex2 variante de la fase 2 · low variante de bajo impacto
+   fix el bloque no cambia con la semana                     */
+const W_CAL = {ex:'calent', r:'8 a 10 min'};
+const DAYS = {
+  1:{name:'Lunes', md:'MD+1', title:'Recuperación y movilidad', dur:'25–35 min',
+    goal:'Sacar la carga del partido. Nada intenso: mover y soltar.',
+    blocks:[
+      {t:'Recuperación', fix:true, items:[{ex:'trote_z2', r:'12 a 15 min'}]},
+      {t:'Movilidad', fix:true, items:[
+        {ex:'cadera_9090', s:[2,2,2], r:'6 por lado'},
+        {ex:'wgs', s:[2,2,2], r:'5 por lado'},
+        {ex:'tobillo_pared', s:[2,2,2], r:'10 por lado'},
+        {ex:'flexor', s:[2,2,2], r:'30 s por lado'},
+        {ex:'puente', s:[2,2,2], r:'12'},
+        {ex:'gato', r:'10 lentos'},
+        {ex:'foam', r:'5 min', opt:true}]}],
+    comp:[{ex:'comp', r:'3 × 3 min y 6 × 20 m'}]},
+  2:{name:'Martes', md:'MD+2', title:'Fuerza y prevención', dur:'45–55 min',
+    goal:'Fuerza de piernas y los dos ejercicios que más lesiones previenen en el futbol.',
+    blocks:[
+      {t:'Calentamiento', fix:true, items:[W_CAL]},
+      {t:'Elasticidad', items:[{ex:'pogos', s:[2,3,3], r:'15', n:15, rest:'45 s', rs:45}]},
+      {t:'Fuerza', items:[
+        {ex:'sentadilla', s:[2,3,4], r:['6','5'], rest:'2 min', rs:120},
+        {ex:'rdl1p', s:[2,3,3], r:'8 por pierna', rest:'60 s', rs:60},
+        {ex:'hip_thrust', s:[2,3,3], r:['10','8'], rest:'60 s', rs:60},
+        {ex:'talones1p', s:[2,3,3], r:'12 por pierna', rest:'45 s', rs:45}]},
+      {t:'Prevención', items:[
+        {ex:'nordico', s:[1,2,3], r:['4','6'], rest:'2 min', rs:120},
+        {ex:'copenhague', s:[1,2,2], r:['5 por lado','8 por lado'], lv:['Nivel 1','Nivel 2','Nivel 3'], rest:'60 s', rs:60},
+        {ex:'deadbug', s:[2,2,3], r:'8 por lado', rest:'30 s', rs:30}]}]},
+  3:{name:'Miércoles', md:'MD-4', title:'Potencia: saltos y aceleración', dur:'45–55 min',
+    goal:'El día fuerte de saltos. Cada repetición al máximo y con descanso completo. Si el salto pierde altura o el aterrizaje hace ruido, termina la serie.',
+    blocks:[
+      {t:'Calentamiento', fix:true, items:[W_CAL]},
+      {t:'Semana de pruebas', test:true, info:'Hoy, después del calentamiento y antes de los saltos, haz el salto vertical, el sprint de 30 m y el 5-10-5. La prueba de tobillo hazla el lunes. Anota todo en Progreso.'},
+      {t:'Aterrizaje', items:[{ex:'snapdown', s:[2,2,2], r:'5', n:5, rest:'30 s', rs:30}]},
+      {t:'Pliometría', items:[
+        {ex:'box_jump', s:[3,4,4], r:'5', n:5, rest:'75 s', rs:75},
+        {ex:'broad_pausa', ex2:'triple', low:'broad_pausa', s:[3,3,4], r:['4','2'], n:[4,6], rest:'90 s', rs:90},
+        {ex:'skater_pausa', ex2:'skater_reac', low:'skater_pausa', s:[2,3,3], r:['4 por lado','5 por lado'], n:[4,5], side:true, rest:'60 s', rs:60},
+        {ex:'vallas', ex2:'hop_1p', low:'vallas', s:[2,3,3], r:['5','3 por pierna'], n:[5,3], side:[false,true], rest:'60 s', rs:60}]},
+      {t:'Aceleración', items:[{ex:'arrancada10', unit:'rep', s:[4,6,8], r:'de 10 m', rest:'75 s', rs:75}]},
+      {pos:'mie'}]},
+  4:{name:'Jueves', md:'MD-3', title:'Resistencia y cambios de dirección', dur:'40–50 min',
+    goal:'Frenar y girar con control, y aguantar el partido completo.',
+    blocks:[
+      {t:'Calentamiento', fix:true, items:[W_CAL]},
+      {t:'Cambios de dirección', items:[
+        {ex:'desacel', unit:'rep', s:[4,5,6], r:'de 10 m', rest:'45 s', rs:45},
+        {ex:'drill505', unit:'rep', s:[3,4,4], r:'alternando lado', rest:'90 s', rs:90},
+        {ex:'zigzag', unit:'rep', s:[3,4,4], r:'de 5 conos', rest:'60 s', rs:60}]},
+      {pos:'jue'},
+      {t:'Resistencia', items:[{ex:'hiit4x4', s:[3,4,4], r:'4 min', rest:'3 min trotando', rs:180}]},
+      {t:'Cierre', items:[
+        {ex:'plancha_lat', s:[2,2,3], r:'30 s por lado', rest:'30 s', rs:30},
+        {ex:'talones1p', s:[2,2,2], r:'15 por pierna', rest:'45 s', rs:45}]}]},
+  5:{name:'Viernes', md:'MD-2', title:'Velocidad y reacción', dur:'30–40 min',
+    goal:'Rápido y fresco: pocas repeticiones, descanso completo y cero cansancio.',
+    blocks:[
+      {t:'Calentamiento', fix:true, items:[W_CAL]},
+      {t:'Técnica de carrera', fix:true, items:[
+        {ex:'skipA', s:[2,2,2], r:'15 m', rest:'30 s', rs:30},
+        {ex:'pogos', s:[2,2,2], r:'10', n:10, rest:'30 s', rs:30}]},
+      {t:'Reactividad', items:[{ex:'linea_lat', s:[2,2,3], r:'12 contactos', n:12, rest:'45 s', rs:45}]},
+      {t:'Velocidad', items:[
+        {ex:'sprint20', unit:'rep', s:[3,4,4], r:'desde parado', rest:'2 min', rs:120},
+        {ex:'sprint_lanz', unit:'rep', s:[2,3,4], r:'de 10 m + 20 m al máximo', rest:'3 min', rs:180}]},
+      {t:'Agilidad', items:[{ex:'reaccion', unit:'rep', s:[4,5,6], r:'de 5 s', rest:'40 s', rs:40}]},
+      {pos:'vie'}]},
+  6:{name:'Sábado', md:'MD-1', title:'Activación', dur:'20–25 min',
+    goal:'Despertar las piernas sin cansarlas. Nada nuevo y nada pesado: mañana se juega.',
+    blocks:[
+      {t:'Movilidad', fix:true, items:[{ex:'calent', r:'versión corta, 6 min'},{ex:'tobillo_pared', r:'10 por lado'}]},
+      {t:'Activación', fix:true, items:[
+        {ex:'pogos', r:'1 serie de 10', n:10},
+        {ex:'acel_suave', unit:'rep', s:[3,3,3], r:'de 20 m', rest:'60 s', rs:60},
+        {ex:'balon', r:'10 min'}]}]},
+  0:{name:'Domingo', md:'MD', title:'Partido', dur:'Partido', match:true,
+    goal:'Calienta bien, juega y anota cómo te fue. Ese registro ajusta tu lunes.',
+    blocks:[
+      {t:'Antes del partido', fix:true, items:[{ex:'calent_partido', r:'10 a 12 min'}]},
+      {t:'Después', fix:true, items:[{ex:'enfriamiento', r:'15 min'}]}]}
+};
+
+const TESTS = [
+  {id:'cmj', n:'Salto vertical', u:'cm', up:true, how:'tt_cmj'},
+  {id:'sp30', n:'Sprint 30 m', u:'s', up:false, how:'tt_30'},
+  {id:'t505', n:'5-10-5', u:'s', up:false, how:'tt_505'},
+  {id:'ktw', n:'Tobillo (rodilla a la pared)', u:'cm', up:true, how:'tobillo_pared'}
+];
+const RPE_TXT = {1:'Muy fácil, casi nada',2:'Muy fácil',3:'Fácil',4:'Fácil, pero ya trabajaste',5:'Moderado',6:'Moderado, sudaste',7:'Duro',8:'Muy duro',9:'Casi al máximo',10:'Máximo, no podías más'};
+
+/* ===================== Íconos ===================== */
+const I = {
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>',
+  prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
+  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  hoy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 15l2.2 2.2 4.8-4.7"/></svg>',
+  prog:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  team:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.3"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.6c2.6.2 4.4 1.9 5 4.9"/></svg>',
+  guia:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/></svg>'
+};
+
+/* ===================== Utilidades ===================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const addDays = (d,n) => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate()+n); return x; };
+const monday = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - ((x.getDay()+6)%7)); return x; };
+const todayISO = () => iso(new Date());
+const num = n => Number(n||0).toLocaleString('es-MX');
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const longDate = ds => cap(parse(ds).toLocaleDateString('es-MX',{weekday:'long', day:'numeric', month:'long'}));
+const shortDate = ds => parse(ds).toLocaleDateString('es-MX',{day:'numeric', month:'short'}).replace('.','');
+const uid = () => 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const firstNum = s => { const m = String(s).match(/\d+/g); if(!m) return 30; return m.length>1 ? Math.round((+m[0] + +m[1])/2) : +m[0]; };
+
+/* ===================== Datos ===================== */
+const KEY = 'planfutbol_v1';
+let storageOK = true, memCopy = null;
+function load(){
+  let d = null;
+  try { const raw = localStorage.getItem(KEY); if (raw) d = JSON.parse(raw); } catch(e){ storageOK = false; }
+  if (!d) d = memCopy || {v:1, active:null, profiles:{}, sync:{url:'', key:'', pending:[]}};
+  d.sync = d.sync || {url:'', key:'', pending:[]};
+  d.sync.pending = d.sync.pending || [];
+  return d;
+}
+function save(){
+  memCopy = DB;
+  try { localStorage.setItem(KEY, JSON.stringify(DB)); storageOK = true; } catch(e){ storageOK = false; }
+}
+let DB = load();
+const S = {tab:'hoy', sel:todayISO(), setup:null, adding:false, delArm:false, team:null, teamErr:'', teamAt:0, teamLoading:false, err:''};
+const P = () => DB.active && DB.profiles[DB.active] ? DB.profiles[DB.active] : null;
+
+function getLog(p, ds, create){
+  if (!p.logs[ds] && create) p.logs[ds] = {done:{}, ready:{}, light:false, comp:false, rpe:null, min:null, note:'', completed:false};
+  return p.logs[ds] || null;
+}
+function weekInfo(p, ds){
+  const days = Math.round((monday(parse(ds)) - monday(parse(p.start))) / 864e5);
+  const abs = Math.floor(days/7) + 1;
+  if (abs < 1) return {abs, before:true, cw:1, cycle:1, W:WEEKS[0]};
+  const cw = ((abs-1) % 8) + 1;
+  return {abs, before:false, cw, cycle:Math.ceil(abs/8), W:WEEKS[cw-1]};
+}
+
+/* Prescripción de un ejercicio para este jugador, esta semana */
+function rx(it, p, wk, light, fixBlock){
+  const li = LEVELS[p.level].i;
+  let exId = it.ex, pi = 0;
+  if (wk.W.ph === 2 && it.ex2){ exId = it.ex2; pi = 1; }
+  if (p.low && it.low){ exId = it.low; pi = 0; }
+  let sets = it.s ? it.s[li] : 1;
+  if (it.s && !fixBlock){
+    sets = Math.max(1, Math.round(sets * wk.W.f));
+    if (light) sets = Math.max(1, Math.ceil(sets * .5));
+  }
+  const pick = v => Array.isArray(v) ? v[pi] : v;
+  const r = pick(it.r), n = pick(it.n) || 0, side = !!pick(it.side);
+  let text;
+  if (it.unit === 'rep') text = `${sets} ${sets===1?'repetición':'repeticiones'} ${r||''}`.trim();
+  else if (it.unit === 'serie') text = `${sets} ${sets===1?'serie':'series'} ${r||''}`.trim();
+  else if (!it.s) text = r;
+  else text = `${sets} × ${r}`;
+  return {exId, sets, text, contacts: n ? sets*n*(side?2:1) : 0, rest:it.rest||'', rs:it.rs||0,
+    lv: it.lv ? it.lv[li] : '', opt:!!it.opt};
+}
+
+/* El plan de un día, ya ajustado */
+function dayPlan(p, ds){
+  const dow = parse(ds).getDay(), D = DAYS[dow], wk = weekInfo(p, ds);
+  const L = p.logs[ds] || {done:{}, ready:{}};
+  const light = !!L.light;
+  const blocks = [];
+  const mk = (it, key, fix) => { const R = rx(it, p, wk, light, fix); return {key, R, E:EX[R.exId]}; };
+  D.blocks.forEach((b, bi) => {
+    if (b.test && !wk.W.test) return;
+    if (b.info){ blocks.push({t:b.t, info:b.info}); return; }
+    if (b.pos){ blocks.push({t:'Tu posición', sub:POS[p.pos].n, items:[mk(POSD[p.pos][b.pos], `p${bi}`, false)]}); return; }
+    blocks.push({t:b.t, items:b.items.map((it, ii) => mk(it, `${bi}-${ii}`, !!b.fix))});
+  });
+  if (dow === 1 && L.comp) blocks.splice(1, 0, {t:'Compensatorio', sub:'porque jugaste poco', items:D.comp.map((it, ii) => mk(it, `c-${ii}`, true))});
+  let contacts = 0, total = 0, done = 0;
+  blocks.forEach(b => (b.items||[]).forEach(x => {
+    contacts += x.R.contacts; total += x.R.sets;
+    const arr = (L.done && L.done[x.key]) || [];
+    for (let i = 0; i < x.R.sets; i++) if (arr[i]) done++;
+  }));
+  return {D, dow, wk, L, light, blocks, contacts, total, done};
+}
+
+function readiness(r){
+  if (!r) return null;
+  const v = [r.sleep, r.legs, r.pain];
+  if (v.some(x => x == null)) return null;
+  if (r.pain === 2) return 'stop';
+  if (r.sleep === 2 || r.legs === 2 || (r.sleep + r.legs + r.pain) >= 3) return 'warn';
+  return 'ok';
+}
+
+/* ===================== Vistas ===================== */
+function header(p, withDays){
+  const wk = weekInfo(p, S.sel);
+  const lv = LEVELS[p.level].n.toLowerCase();
+  let wkHtml = '';
+  if (withDays){
+    const isThis = iso(monday(parse(S.sel))) === iso(monday(new Date()));
+    wkHtml = `<div class="wkline">
+      <button class="navbtn" data-a="wk" data-n="-1" aria-label="Semana anterior">${I.prev}</button>
+      <div class="wk-txt"><b>${wk.before ? 'Antes de empezar' : `Semana ${wk.abs} de ${8*wk.cycle}`}</b><span>${esc(wk.before ? 'Aún no empieza tu plan' : wk.W.name)}</span></div>
+      <button class="navbtn" data-a="wk" data-n="1" aria-label="Semana siguiente">${I.next}</button>
+      ${isThis ? '' : '<button class="pill link" data-a="today">Ir a hoy</button>'}
+    </div>`;
+  }
+  let days = '';
+  if (withDays){
+    const mon = monday(parse(S.sel)), t = todayISO();
+    days = '<nav class="days" aria-label="Días de la semana">' + ORDER.map((dow, i) => {
+      const ds = iso(addDays(mon, i)), L = p.logs[ds];
+      const done = L && L.completed;
+      return `<button class="day${done?' done':''}${ds===t?' today':''}" data-a="day" data-d="${ds}" aria-current="${ds===S.sel}" aria-label="${DAYS[dow].name} ${shortDate(ds)}: ${FOCUS[dow]}${done?', hecho':''}">
+        <b>${SHORT[dow]}</b><small>${FOCUS[dow]}</small><span class="dk">${done?I.check.replace('#fff','currentColor'):''}</span></button>`;
+    }).join('') + '</nav>';
+  }
+  return `<header class="pitch"><div class="head">
+    ${p.num ? `<div class="dorsal" aria-hidden="true">${esc(p.num)}</div>` : ''}
+    <p class="team">${esc(CONFIG.TEAM_NAME)}</p>
+    <button class="who" data-a="profile" aria-label="Perfil de ${esc(p.name)}: cambiar o editar">
+      <span class="who-name">${esc(p.name)}</span>
+      <span class="who-meta">${esc(POS[p.pos].n)}, ${esc(lv)}${p.low?', bajo impacto':''} <u>(editar)</u></span>
+    </button>${wkHtml}</div>${days}</header>`;
+}
+
+function tabs(){
+  const t = [['hoy','Hoy',I.hoy],['progreso','Progreso',I.prog],['equipo','Equipo',I.team],['guia','Guía',I.guia]];
+  return `<nav class="tabs" aria-label="Secciones"><div class="tabs-in">${t.map(([k,l,ic]) =>
+    `<button class="tab" data-a="tab" data-t="${k}" ${S.tab===k?'aria-current="page"':''}>${ic}<span>${l}</span></button>`).join('')}</div></nav>`;
+}
+
+function itemHTML(x, L){
+  const {key, R, E} = x;
+  const arr = (L && L.done && L.done[key]) || [];
+  let boxes = '', n = 0;
+  for (let i = 0; i < R.sets; i++){
+    const on = !!arr[i]; if (on) n++;
+    boxes += `<button class="box" data-a="box" data-k="${key}" data-i="${i}" ${R.rs?`data-rs="${R.rs}"`:''} aria-pressed="${on}" aria-label="${esc(E.n)}, serie ${i+1} de ${R.sets}">${I.check}</button>`;
+  }
+  const rest = R.rs ? `<button class="rest" data-a="timer" data-s="${R.rs}" aria-label="Iniciar descanso de ${esc(R.rest)}">${I.clock}${esc(R.rest)}</button>` : '';
+  return `<div class="item${n>=R.sets?' done':''}">
+    <button class="ex-name" data-a="ex" data-id="${R.exId}">${esc(E.n)}</button>${R.opt?' <span class="opt-tag">opcional</span>':''}
+    <div class="rx">${esc(R.text)}${R.lv?`<span class="lv">${esc(R.lv)}</span>`:''}</div>
+    ${E.alt?`<div class="alt">${esc(E.alt)}</div>`:''}
+    <div class="boxes">${boxes}${rest}</div></div>`;
+}
+
+function viewHoy(p){
+  const ds = S.sel, plan = dayPlan(p, ds), {D, dow, wk, L} = plan;
+  const Lc = p.logs[ds];
+  let h = '';
+  if (wk.before) h += `<div class="notice">Tu plan empieza el ${longDate(p.start).toLowerCase()}. Puedes revisar las sesiones desde ahora.</div>`;
+  if (!storageOK) h += `<div class="notice">Este navegador no deja guardar datos (¿modo privado?). Lo que marques se pierde al cerrar la página.</div>`;
+  h += `<p class="date">${longDate(ds)}</p><h1 class="title">${esc(D.title)}</h1><p class="goal">${esc(D.goal)}</p>`;
+  h += `<div class="meta"><span class="chip">${esc(D.dur)}</span>`;
+  if (plan.contacts) h += `<span class="chip">${plan.contacts} saltos</span>`;
+  if (!D.match) h += `<span class="chip" id="setcount">${plan.done} de ${plan.total} series</span>`;
+  if ('wakeLock' in navigator) h += `<button class="chip" data-a="wake" aria-pressed="${!!S.wake}">Pantalla encendida</button>`;
+  h += `</div>`;
+
+  if (!D.match){
+    const r = (Lc && Lc.ready) || {};
+    const q = (f, label, opts) => `<p class="q">${label}</p><div class="seg" role="group" aria-label="${label}">${opts.map((o,i) =>
+      `<button class="b${i}" data-a="ready" data-f="${f}" data-v="${i}" aria-pressed="${r[f]===i}">${o}</button>`).join('')}</div>`;
+    const v = readiness(r);
+    const scal = D.blocks.some(b => b.pos || (b.items && !b.fix));
+    const msg = {ok:['v-ok','Todo listo: entrena completo.'],
+      warn:['v-warn', scal ? 'Hoy haz la versión ligera: mitad de series, misma calidad.' : 'Hoy es día suave de todos modos: hazlo sin forzar.'],
+      stop:['v-stop','Hoy sin saltos ni sprints. Haz solo la movilidad del lunes y, si el dolor sigue mañana, que te revise un fisioterapeuta.']};
+    h += `<section class="panel" aria-labelledby="rdy"><h2 id="rdy">¿Cómo llegas hoy?</h2>
+      ${q('sleep','Dormiste',['Bien','Regular','Mal'])}
+      ${q('legs','Tus piernas',['Frescas','Cargadas','Muy cargadas'])}
+      ${q('pain','Dolor',['Nada','Molestia leve','Cambia cómo me muevo'])}
+      ${v ? `<div class="verdict ${msg[v][0]}">${msg[v][1]}</div>` : ''}
+      ${scal ? `<label class="switch"><span><b>Versión ligera</b><small>Mitad de series en saltos, fuerza y carrera</small></span>
+        <input type="checkbox" data-tog="light" ${plan.light?'checked':''}></label>` : ''}
+      ${dow===1 ? `<label class="switch"><span><b>Jugué menos de 45 min</b><small>Agrega un bloque compensatorio de carrera</small></span>
+        <input type="checkbox" data-tog="comp" ${Lc&&Lc.comp?'checked':''}></label>` : ''}
+    </section>`;
+  }
+
+  plan.blocks.forEach(b => {
+    if (b.info){
+      h += `<section class="notice green"><b>${esc(b.t)}.</b> ${esc(b.info)}<div class="btns"><button class="btn" data-a="goto-tests">Anotar pruebas</button></div></section>`;
+      return;
+    }
+    h += `<section class="block"><h2>${esc(b.t)}${b.sub?`<small>${esc(b.sub)}</small>`:''}</h2><div class="list">${b.items.map(x => itemHTML(x, Lc)).join('')}</div></section>`;
+  });
+
+  const rpe = Lc && Lc.rpe;
+  const rpeBtns = `<div class="rpe" role="group" aria-label="Esfuerzo del 1 al 10">${[1,2,3,4,5,6,7,8,9,10].map(i =>
+    `<button data-a="rpe" data-v="${i}" aria-pressed="${rpe===i}">${i}</button>`).join('')}</div>
+    <p class="rpe-txt" id="rpe-txt">${rpe ? `${rpe}: ${RPE_TXT[rpe]}` : 'Toca un número'}</p>`;
+  const minV = Lc && Lc.min != null ? Lc.min : '';
+  const saved = Lc && Lc.completed ? `<p class="saved">Guardada. Puedes corregirla y volver a guardar.</p>` : '';
+  if (D.match){
+    h += `<section class="finish" aria-labelledby="fin"><h2 id="fin">Registro del partido</h2><p>¿Qué tan duro fue? Del 1 al 10.</p>${rpeBtns}
+      <label class="field"><span>Minutos jugados</span><input type="number" inputmode="numeric" min="0" max="130" data-log="min" value="${minV}" placeholder="90"></label>
+      <label class="field"><span>Notas: molestias, resultado, cómo te sentiste</span><textarea data-log="note">${esc(Lc&&Lc.note)}</textarea></label>
+      <button class="btn bib full" data-a="save" data-type="partido">Guardar partido</button>${saved}</section>`;
+  } else {
+    h += `<section class="finish" aria-labelledby="fin"><h2 id="fin">Terminar sesión</h2><p>¿Qué tan duro fue en total? Del 1 al 10.</p>${rpeBtns}
+      <label class="field"><span>Minutos</span><input type="number" inputmode="numeric" min="0" max="240" data-log="min" value="${minV}" placeholder="${firstNum(D.dur)}"></label>
+      <label class="field"><span>Notas (opcional)</span><textarea data-log="note">${esc(Lc&&Lc.note)}</textarea></label>
+      <button class="btn bib full" data-a="save" data-type="sesion">Guardar sesión</button>${saved}</section>`;
+  }
+  return h;
+}
+
+function weekStats(p, mon){
+  let ses = 0, load = 0, matchMin = 0, match = false;
+  for (let i = 0; i < 7; i++){
+    const ds = iso(addDays(mon, i)), L = p.logs[ds];
+    if (!L || !L.completed) continue;
+    if (i === 6){ match = true; matchMin += Number(L.min)||0; } else ses++;
+    load += (Number(L.rpe)||0) * (Number(L.min)||0);
+  }
+  return {ses, load, matchMin, match};
+}
+
+function viewProg(p){
+  const t = todayISO(), wk = weekInfo(p, t);
+  const mon = monday(new Date());
+  const st = weekStats(p, mon), prev = weekStats(p, addDays(mon, -7));
+  let h = `<h1 class="title">Tu progreso</h1>`;
+  h += `<section class="panel"><p class="sum">Esta semana llevas <b>${st.ses} de 6</b> sesiones${st.match?` y el partido (${st.matchMin} min)`:''}.</p>
+    <p class="sum">Carga: <b>${num(st.load)}</b> <small>(esfuerzo × minutos)</small>. La semana pasada: ${num(prev.load)}.</p>
+    ${prev.load && st.load > prev.load*1.3 ? '<p class="notice" style="margin:8px 0 0">Subiste más de 30% contra la semana pasada. Si sientes las piernas pesadas, usa la versión ligera unos días.</p>' : ''}</section>`;
+
+  // ciclo
+  const cyc = wk.before ? 1 : wk.cycle;
+  const startMon = addDays(monday(parse(p.start)), (cyc-1)*56);
+  let g = `<div class="cyc-row hd"><span></span>${ORDER.map(d => `<span>${SHORT[d]}</span>`).join('')}</div>`;
+  for (let w = 0; w < 8; w++){
+    g += `<div class="cyc-row"><span class="wl">S${(cyc-1)*8+w+1}</span>`;
+    for (let i = 0; i < 7; i++){
+      const ds = iso(addDays(startMon, w*7+i)), L = p.logs[ds];
+      let cls = 'fut', lab = 'pendiente';
+      if (L && L.completed){ cls = 'done'; lab = i===6 ? 'partido registrado' : 'hecha'; }
+      else if (L && Object.values(L.done||{}).some(a => (a||[]).some(Boolean))){ cls = 'part'; lab = 'a medias'; }
+      else if (ds < t){ cls = 'miss'; lab = 'sin registrar'; }
+      const name = DAYS[ORDER[i]].name;
+      g += `<button class="cell ${cls}${ds===t?' today':''}" data-a="day" data-d="${ds}" title="${name} ${shortDate(ds)}: ${lab}" aria-label="${name} ${shortDate(ds)}: ${lab}">${cls==='done'?I.check:''}</button>`;
+    }
+    g += `</div>`;
+  }
+  h += `<section class="panel"><h2>Ciclo ${cyc}</h2>${g}
+    <div class="legend"><span><i class="l-done"></i>Hecha</span><span><i class="l-part"></i>A medias</span><span><i class="l-miss"></i>Sin registrar</span><span><i></i>Pendiente</span></div></section>`;
+
+  // pruebas
+  const T = (p.tests && p.tests['c'+cyc]) || {};
+  const rows = TESTS.map(x => {
+    const a = T.s1 && T.s1[x.id], b = T.s8 && T.s8[x.id];
+    let d = '';
+    if (a && b){
+      const diff = +(b - a).toFixed(2), good = x.up ? diff > 0 : diff < 0;
+      d = `<span class="delta ${diff===0?'':good?'good':'bad'}">${diff>0?'+':''}${diff} ${x.u}${diff===0?'':good?' mejor':' peor'}</span>`;
+    }
+    const w1 = (cyc-1)*8+1, w8 = (cyc-1)*8+8;
+    const inp = (col, v, w) => `<label><span>Semana ${w}</span><input type="number" inputmode="decimal" step="0.01" data-test="${x.id}" data-col="${col}" value="${v==null?'':v}" aria-label="${x.n}, semana ${w}, en ${x.u}"></label>`;
+    return `<div class="test"><button class="how" data-a="ex" data-id="${x.how}">${esc(x.n)}</button> <small>${x.u}, ${x.up?'más es mejor':'menos es mejor'}</small>
+      <div class="test-row">${inp('s1', a, w1)}${inp('s8', b, w8)}<div class="delta-cell">${d}</div></div></div>`;
+  }).join('');
+  h += `<section class="panel" id="tests"><h2>Pruebas</h2><p>Se hacen el miércoles de la semana ${(cyc-1)*8+1} y de la semana ${(cyc-1)*8+8}. Toca el nombre de cada prueba para ver cómo medirla.</p>
+    <div class="tests">${rows}</div></section>`;
+
+  // historial
+  const hist = Object.keys(p.logs).filter(k => p.logs[k].completed).sort().reverse().slice(0, 15);
+  h += `<section class="panel"><h2>Historial</h2>${hist.length ? `<ul class="hist">${hist.map(ds => {
+    const L = p.logs[ds], dw = parse(ds).getDay();
+    return `<li><button data-a="day" data-d="${ds}"><span>${esc(DAYS[dw].title)}<small>${longDate(ds)}${L.rpe?`, esfuerzo ${L.rpe}`:''}${L.min?`, ${L.min} min`:''}${L.light?', ligera':''}</small></span>
+      <span class="ld">${num((L.rpe||0)*(L.min||0))}</span></button></li>`; }).join('')}</ul>` :
+    '<p>Aún no hay sesiones guardadas. Al terminar una, toca «Guardar sesión» en Hoy.</p>'}</section>`;
+  return h;
+}
+
+function shareText(p){
+  const mon = monday(new Date()), st = weekStats(p, mon), wk = weekInfo(p, todayISO());
+  const lines = [`${CONFIG.TEAM_NAME}: ${p.name}${p.num?` #${p.num}`:''} (${POS[p.pos].n})`,
+    `Semana ${wk.before?1:wk.abs}: ${st.ses} de 6 sesiones`, `Carga: ${num(st.load)}`];
+  if (st.match) lines.push(`Partido: ${st.matchMin} min`);
+  const T = p.tests && p.tests['c'+(wk.before?1:wk.cycle)];
+  if (T && T.s1 && T.s1.cmj) lines.push(`Salto vertical: ${T.s8&&T.s8.cmj ? `${T.s1.cmj} → ${T.s8.cmj}` : T.s1.cmj} cm`);
+  if (location.protocol.startsWith('http')) lines.push(`Plan: ${location.origin}${location.pathname}`);
+  return lines.join('\n');
+}
+const syncURL = () => (DB.sync.url || CONFIG.SYNC_URL || '').trim();
+const syncKey = () => (DB.sync.key || CONFIG.SYNC_KEY || '').trim();
+
+function viewTeam(p){
+  let h = `<h1 class="title">Equipo</h1>`;
+  const txt = shareText(p);
+  h += `<section class="panel"><h2>Comparte tu semana</h2><p>Mándalo al grupo para que todos vean cómo van.</p>
+    <div class="share-box">${esc(txt)}</div>
+    <div class="btns">${navigator.share?'<button class="btn" data-a="share" data-m="native">Compartir</button>':''}
+      <a class="btn" href="https://wa.me/?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      <button class="btn ghost" data-a="share" data-m="copy">Copiar texto</button></div></section>`;
+  const url = syncURL();
+  if (url){
+    let body = '';
+    if (S.teamLoading && !S.team) body = '<p>Cargando tablero…</p>';
+    else if (S.teamErr) body = `<p class="err">${esc(S.teamErr)}</p>`;
+    if (S.team){
+      const rows = [...S.team].sort((a,b) => b.sesiones - a.sesiones || b.carga - a.carga);
+      body += rows.length ? `<table class="t board"><thead><tr><th>#</th><th>Jugador</th><th>Sesiones</th><th>Carga</th></tr></thead><tbody>${rows.map(j =>
+        `<tr class="${j.id===p.id?'me':''}"><td>${esc(j.dorsal||'')}</td><td>${esc(j.nombre)}<br><small>${esc(j.posicion||'')}${j.partido_min?`, ${j.partido_min} min de partido`:''}</small></td><td>${j.sesiones} de 6</td><td>${num(j.carga)}</td></tr>`).join('')}</tbody></table>`
+        : '<p>Nadie ha registrado sesiones esta semana todavía.</p>';
+    }
+    const pend = DB.sync.pending.length;
+    h += `<section class="panel"><h2>Tablero de la semana</h2>${body}
+      ${pend ? `<p class="notice" style="margin:10px 0 0">${pend} ${pend===1?'registro espera':'registros esperan'} conexión para subir.</p>` : ''}
+      <div class="btns"><button class="btn ghost" data-a="team-refresh">Actualizar</button>${pend?'<button class="btn ghost" data-a="flush">Subir pendientes</button>':''}</div></section>`;
+  } else {
+    h += `<section class="panel"><h2>Tablero del equipo</h2><p>El tablero muestra quién entrenó esta semana. Se activa cuando el organizador conecta una hoja de Google (instrucciones en el README del proyecto). Mientras, usen el botón de compartir en el grupo.</p></section>`;
+  }
+  h += `<details class="panel"><summary>Conexión del tablero</summary><div class="dbody">
+    <p>Solo si el organizador te pasó una dirección distinta a la que ya trae la app.</p>
+    <label class="field"><span>URL del Apps Script</span><input type="url" id="sync-url" value="${esc(DB.sync.url||'')}" placeholder="${esc(CONFIG.SYNC_URL||'https://script.google.com/macros/s/…/exec')}"></label>
+    <label class="field"><span>Clave del equipo</span><input type="text" id="sync-key" value="${esc(DB.sync.key||'')}" placeholder="${CONFIG.SYNC_URL?'la que trae la app':'clave'}"></label>
+    <button class="btn" data-a="sync-save">Guardar conexión</button></div></details>`;
+  return h;
+}
+
+function viewGuide(){
+  const days = ORDER.map(d => `<li><b>${SHORT[d]}</b><span><strong>${esc(DAYS[d].title)}.</strong> ${esc(DAYS[d].goal)}</span></li>`).join('');
+  const lib = Object.entries(EX).filter(([k]) => !k.startsWith('tt_'))
+    .sort((a,b) => a[1].n.localeCompare(b[1].n, 'es'))
+    .map(([k,e]) => `<li data-name="${esc((e.n+' '+e.g).toLowerCase())}"><button data-a="ex" data-id="${k}">${esc(e.n)}<small>${esc(e.g)}</small></button></li>`).join('');
+  return `<h1 class="title">Guía</h1>
+  <details class="panel sec" open><summary>Así funciona tu semana</summary><div class="dbody">
+    <p>Todo gira alrededor del partido del domingo. Lo más intenso queda a cuatro días del partido y el sábado solo activa.</p>
+    <ul class="week-list">${days}</ul>
+    <p>El plan dura 8 semanas y luego se repite. Las semanas 4 y 8 bajan la carga para que el cuerpo asimile. Desde la semana 5 los saltos se vuelven más reactivos.</p></div></details>
+
+  <details class="panel sec"><summary>Reglas para no lastimarte</summary><div class="dbody"><ul>
+    <li><b>Para</b> si sientes dolor punzante, dolor en la articulación (rodilla, tobillo) al caer, o dolor que cambia tu forma de moverte.</li>
+    <li>Las agujetas (dolor muscular difuso de 1 a 3 días) son normales. Un tendón (rodilla o Aquiles) que duele más al día siguiente pide menos saltos esa semana.</li>
+    <li>Aterriza en silencio: rodillas en línea con la punta de los pies, nunca hacia adentro; cadera atrás y pecho al frente.</li>
+    <li>Calidad antes que cantidad. Si el salto pierde altura o el aterrizaje hace ruido, termina la serie.</li>
+    <li>Salta sobre pasto, pista o sintético. Evita el concreto para la pliometría.</li>
+    <li>Descanso completo en saltos (60 a 90 s) y sprints (2 a 3 min). Usa el botón de reloj.</li>
+    <li>Si pesas 95 kg o más, o vienes de una lesión de rodilla o tobillo, activa el modo bajo impacto en tu perfil.</li>
+    <li>El sábado no pruebes nada nuevo.</li>
+    <li>Esta guía no sustituye a un médico ni a un fisioterapeuta.</li></ul></div></details>
+
+  <details class="panel sec"><summary>Cómo leer el plan</summary><div class="dbody"><dl class="gl">
+    <dt>3 × 8 por pierna</dt><dd>3 series de 8 repeticiones con cada pierna. Cada cuadrito es una serie: márcalo al terminarla y arranca el descanso solo.</dd>
+    <dt>Saltos</dt><dd>Cuántas veces tocas el piso saltando en la sesión. Así se controla la carga de la pliometría.</dd>
+    <dt>Esfuerzo (1 a 10)</dt><dd>Qué tan dura fue la sesión completa. 3 es fácil, 5 moderado, 7 duro, 9 casi al máximo.</dd>
+    <dt>Carga</dt><dd>Esfuerzo × minutos. Sirve para comparar semanas. Subir más de 30% de golpe aumenta el riesgo de lesión.</dd>
+    <dt>Versión ligera</dt><dd>Mitad de series. Para cuando dormiste mal, tienes las piernas muy cargadas o una molestia.</dd>
+    <dt>Bajo impacto</dt><dd>Cambia los saltos más agresivos por versiones con menos impacto.</dd>
+    <dt>Nivel</dt><dd>Inicial, intermedio o avanzado cambia el número de series. En el Copenhague también cambia la palanca.</dd>
+    <dt>MD+1, MD-4…</dt><dd>Días después (+) o antes (−) del partido (MD, del inglés <i>match day</i>).</dd></dl></div></details>
+
+  <details class="panel sec"><summary>Por qué este plan</summary><div class="dbody"><ul>
+    <li><b>Un día fuerte de saltos.</b> Una revisión de 90 estudios en futbolistas sugiere 1 o 2 sesiones por semana, con alrededor de 80 saltos de máxima calidad, durante al menos 7 semanas.</li>
+    <li><b>Dosis pequeñas el resto de la semana.</b> En jugadores jóvenes, repartir el mismo volumen de saltos en tres días dio menos dolor muscular que concentrarlo en uno.</li>
+    <li><b>Nórdico.</b> Los programas que lo incluyen reducen a la mitad las lesiones de isquios.</li>
+    <li><b>Copenhague.</b> Una vez por semana en temporada redujo 41% los problemas de ingle en futbolistas semiprofesionales.</li>
+    <li><b>Calentamiento FIFA 11+.</b> Redujo 39% las lesiones en futbol recreativo y semiprofesional.</li>
+    <li><b>4 × 4 del jueves.</b> En el estudio original, dos sesiones por semana subieron el consumo máximo de oxígeno 10.7% y la distancia recorrida en el partido 20%. Aquí va una, porque el partido cuenta como la otra.</li></ul>
+    <ol class="src">
+      <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9230747/" target="_blank" rel="noopener">Programming Plyometric-Jump Training in Soccer: A Review (2022)</a></li>
+      <li><a href="https://lida.sport-iat.de/ta/Record/4095963?lng=en" target="_blank" rel="noopener">Frecuencia semanal de pliometría y dolor muscular, IJSPP (2025)</a></li>
+      <li><a href="https://bjsm.bmj.com/content/53/21/1362" target="_blank" rel="noopener">van Dyk y cols., Nórdico y lesiones de isquios, BJSM (2019)</a></li>
+      <li><a href="https://researchprofiles.ku.dk/da/publications/the-adductor-strengthening-programme-prevents-groin-problems-amon/" target="_blank" rel="noopener">Harøy y cols., Copenhague y problemas de ingle, BJSM (2019)</a></li>
+      <li><a href="https://pubmed.ncbi.nlm.nih.gov/28087568/" target="_blank" rel="noopener">Thorborg y cols., FIFA 11 y 11+, BJSM (2017)</a></li>
+      <li><a href="https://coachsci.sdsu.edu/csa/vol101/helgeru1.htm" target="_blank" rel="noopener">Helgerud y cols., entrenamiento aeróbico en futbol (2001)</a></li></ol></div></details>
+
+  <details class="panel sec"><summary>Ejercicios</summary><div class="dbody">
+    <label class="field"><span class="sr">Buscar ejercicio</span><input type="search" id="exsearch" placeholder="Buscar: salto, isquios, sprint…"></label>
+    <ul class="lib-list" id="lib">${lib}</ul></div></details>
+
+  <details class="panel sec"><summary>Tus datos</summary><div class="dbody">
+    <p>Todo se guarda solo en este teléfono, en este navegador. Nadie más lo ve, salvo lo que mandes al tablero del equipo.</p>
+    <p><b>En iPhone:</b> Safari borra los datos de una página si pasas 7 días usando Safari sin abrirla. Agrégala a la pantalla de inicio (Compartir, luego «Agregar a inicio») y ábrela siempre desde ese ícono.</p>
+    <p>Descarga un respaldo cada semana. Si cambias de teléfono, carga el respaldo en el nuevo.</p>
+    <div class="btns"><button class="btn" data-a="export">Descargar respaldo</button><button class="btn ghost" data-a="import">Cargar respaldo</button></div></div></details>`;
+}
+
+function newDraft(){ return {name:'', num:'', pos:'', level:'', low:false, start:iso(monday(new Date()))}; }
+function viewSetup(){
+  const d = S.setup;
+  const opt = (f, v, b, s) => `<button class="opt" data-a="pick" data-f="${f}" data-v="${v}" aria-pressed="${d[f]===v}"><b>${b}</b>${s?`<span>${s}</span>`:''}</button>`;
+  return `<header class="pitch setup-head"><div class="head"><p class="team">${esc(CONFIG.TEAM_NAME)}</p>
+    <h1>Arma tu plan</h1><p>Seis días de trabajo pensados para llegar mejor al partido del domingo. Tu posición y tu nivel ajustan cada sesión.</p></div></header>
+  <main>
+    <label class="field"><span>Tu nombre o apodo</span><input type="text" data-su="name" value="${esc(d.name)}" autocomplete="nickname" maxlength="24"></label>
+    <label class="field"><span>Tu número (opcional)</span><input type="number" inputmode="numeric" data-su="num" value="${esc(d.num)}" min="0" max="99"></label>
+    <p class="q">Tu posición</p>
+    <div class="choice">${Object.entries(POS).map(([k,v]) => opt('pos', k, v.n)).join('')}</div>
+    <p class="q" style="margin-top:16px">Tu nivel</p>
+    <div class="choice one">${Object.entries(LEVELS).map(([k,v]) => opt('level', k, v.n, v.d)).join('')}</div>
+    <label class="switch panel" style="margin-top:16px"><span><b>Modo bajo impacto</b><small>Recomendado si pesas 95 kg o más, o vienes de lesión de rodilla o tobillo</small></span>
+      <input type="checkbox" data-su="low" ${d.low?'checked':''}></label>
+    <label class="field"><span>Empiezas la semana del</span><input type="date" data-su="start" value="${esc(d.start)}"></label>
+    ${S.err ? `<p class="err">${esc(S.err)}</p>` : ''}
+    <div class="btns"><button class="btn bib" data-a="create">Crear mi plan</button>
+      ${S.adding ? '<button class="btn ghost" data-a="cancel-setup">Cancelar</button>' : ''}</div>
+    <p style="color:var(--muted);font-size:14px;margin-top:16px">Tus datos se guardan solo en este teléfono.</p>
+  </main>`;
+}
+
+function render(){
+  const p = P(), app = $('#app');
+  if (!p || S.adding){
+    if (!S.setup) S.setup = newDraft();
+    app.innerHTML = viewSetup();
+    return;
+  }
+  let body;
+  if (S.tab === 'hoy') body = viewHoy(p);
+  else if (S.tab === 'progreso') body = viewProg(p);
+  else if (S.tab === 'equipo') body = viewTeam(p);
+  else body = viewGuide(p);
+  app.innerHTML = header(p, S.tab === 'hoy') + `<main>${body}</main>` + tabs();
+}
+
+/* ===================== Hoja inferior ===================== */
+function openSheet(html){
+  const s = $('#sheet');
+  s.querySelector('.sheet-in').innerHTML = html;
+  s.hidden = false;
+  document.body.style.overflow = 'hidden';
+  const f = s.querySelector('.x'); if (f) f.focus();
+}
+function closeSheet(){
+  $('#sheet').hidden = true;
+  document.body.style.overflow = '';
+  S.delArm = false;
+}
+function openEx(id){
+  const e = EX[id]; if (!e) return;
+  const q = encodeURIComponent(e.q || (e.n + ' técnica'));
+  openSheet(`<div class="sheet-top"><h2 id="sheet-title">${esc(e.n)}</h2><button class="x" data-a="close" aria-label="Cerrar">${I.x}</button></div>
+    <p class="lead">${esc(e.g)}</p>
+    <ol class="steps">${e.c.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+    ${e.w ? `<div class="callout"><b>Ojo</b>${esc(e.w)}</div>` : ''}
+    ${e.e ? `<div class="callout"><b>Error común</b>${esc(e.e)}</div>` : ''}
+    ${e.f ? `<div class="callout easy"><b>Más fácil</b>${esc(e.f)}</div>` : ''}
+    ${e.d ? `<div class="callout hard"><b>Más difícil</b>${esc(e.d)}</div>` : ''}
+    ${e.alt ? `<p class="alt">${esc(e.alt)}</p>` : ''}
+    <div class="btns"><a class="btn ghost" href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">Ver videos de referencia</a></div>`);
+}
+function profileSheet(p){
+  const others = Object.values(DB.profiles).filter(x => x.id !== p.id);
+  const sel = (id, obj, cur) => `<select id="${id}">${Object.entries(obj).map(([k,v]) => `<option value="${k}" ${k===cur?'selected':''}>${v.n}</option>`).join('')}</select>`;
+  return `<div class="sheet-top"><h2 id="sheet-title">Tu perfil</h2><button class="x" data-a="close" aria-label="Cerrar">${I.x}</button></div>
+    <div class="row2"><label class="field"><span>Nombre</span><input type="text" id="pf-name" value="${esc(p.name)}" maxlength="24"></label>
+    <label class="field"><span>Número</span><input type="number" id="pf-num" value="${esc(p.num)}" min="0" max="99"></label></div>
+    <div class="row2"><label class="field"><span>Posición</span>${sel('pf-pos', POS, p.pos)}</label>
+    <label class="field"><span>Nivel</span>${sel('pf-level', LEVELS, p.level)}</label></div>
+    <label class="field"><span>Empezaste la semana del</span><input type="date" id="pf-start" value="${esc(p.start)}"></label>
+    <label class="switch"><span><b>Modo bajo impacto</b><small>95 kg o más, o regreso de lesión</small></span><input type="checkbox" id="pf-low" ${p.low?'checked':''}></label>
+    <div class="btns"><button class="btn" data-a="save-profile">Guardar cambios</button></div>
+    ${others.length ? `<p class="q" style="margin-top:20px">Otros jugadores en este teléfono</p><ul class="pf-list">${others.map(o =>
+      `<li><button class="btn ghost full" data-a="switch" data-id="${o.id}">Cambiar a ${esc(o.name)}</button></li>`).join('')}</ul>` : ''}
+    <div class="btns"><button class="btn ghost" data-a="add-profile">Agregar otro jugador</button><button class="btn danger" data-a="del-profile">Borrar este perfil</button></div>`;
+}
+
+/* ===================== Acciones ===================== */
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2400); }
+
+function createProfile(){
+  const d = S.setup;
+  if (!d.name.trim()) { S.err = 'Escribe tu nombre o apodo.'; return render(); }
+  if (!d.pos) { S.err = 'Elige tu posición.'; return render(); }
+  if (!d.level) { S.err = 'Elige tu nivel.'; return render(); }
+  const id = uid();
+  DB.profiles[id] = {id, name:d.name.trim(), num:String(d.num||'').slice(0,2), pos:d.pos, level:d.level, low:!!d.low,
+    start: d.start || iso(monday(new Date())), created:Date.now(), logs:{}, tests:{}};
+  DB.active = id; S.setup = null; S.adding = false; S.err = ''; S.tab = 'hoy'; S.sel = todayISO();
+  save(); render(); scrollTo(0,0);
+  toast(`Listo, ${DB.profiles[id].name}. Este es tu día de hoy.`);
+}
+function saveProfile(p){
+  const name = $('#pf-name').value.trim();
+  if (!name) return toast('El nombre no puede quedar vacío.');
+  Object.assign(p, {name, num:String($('#pf-num').value||'').slice(0,2), pos:$('#pf-pos').value, level:$('#pf-level').value,
+    start:$('#pf-start').value || p.start, low:$('#pf-low').checked});
+  save(); closeSheet(); render(); toast('Perfil guardado');
+}
+function deleteProfile(p){
+  delete DB.profiles[p.id];
+  DB.active = Object.keys(DB.profiles)[0] || null;
+  save(); closeSheet(); S.setup = null; render(); toast('Perfil borrado');
+}
+
+function toggleBox(p, btn){
+  const L = getLog(p, S.sel, true), k = btn.dataset.k, i = +btn.dataset.i;
+  const arr = L.done[k] || (L.done[k] = []);
+  arr[i] = !arr[i];
+  save();
+  btn.setAttribute('aria-pressed', String(!!arr[i]));
+  const item = btn.closest('.item');
+  const all = [...item.querySelectorAll('.box')].every(b => b.getAttribute('aria-pressed') === 'true');
+  item.classList.toggle('done', all);
+  const c = $('#setcount');
+  if (c){ const bx = [...document.querySelectorAll('main .box')]; c.textContent = `${bx.filter(b => b.getAttribute('aria-pressed')==='true').length} de ${bx.length} series`; }
+  if (arr[i] && !all && btn.dataset.rs) startTimer(+btn.dataset.rs);
+  if (arr[i] && all) stopTimer();
+}
+function setReady(p, f, v){
+  const L = getLog(p, S.sel, true);
+  L.ready = L.ready || {};
+  L.ready[f] = L.ready[f] === v ? null : v;
+  const r = readiness(L.ready);
+  if ((r === 'warn' || r === 'stop') && !L.lightTouched) L.light = true;
+  if (r === 'ok' && !L.lightTouched) L.light = false;
+  save(); render();
+}
+function setRpe(p, v){
+  const L = getLog(p, S.sel, true);
+  L.rpe = v; save();
+  document.querySelectorAll('.rpe button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.v === v)));
+  const t = $('#rpe-txt'); if (t) t.textContent = `${v}: ${RPE_TXT[v]}`;
+}
+function saveSession(p, type){
+  const L = getLog(p, S.sel, true), plan = dayPlan(p, S.sel);
+  if (!L.rpe) return toast('Elige qué tan duro fue, del 1 al 10.');
+  if (L.min == null || L.min === '') L.min = plan.D.match ? 90 : firstNum(plan.D.dur);
+  L.completed = true; L.at = Date.now();
+  save(); render();
+  toast(type === 'partido' ? 'Partido guardado' : 'Sesión guardada');
+  queue({id:p.id, jugador:p.name, dorsal:p.num||'', posicion:POS[p.pos].n, nivel:LEVELS[p.level].n,
+    fecha:S.sel, tipo:type, dia:plan.D.name, semana:plan.wk.abs, rpe:L.rpe, minutos:L.min, carga:L.rpe*L.min,
+    series_hechas:plan.done, series_total:plan.total, saltos:plan.contacts, ligera:L.light?'sí':'no'});
+}
+function setTest(p, id, col, val){
+  const wk = weekInfo(p, todayISO()), c = 'c' + (wk.before ? 1 : wk.cycle);
+  p.tests = p.tests || {};
+  const T = p.tests[c] || (p.tests[c] = {});
+  T[col] = T[col] || {};
+  const v = parseFloat(String(val).replace(',', '.'));
+  if (isNaN(v)) delete T[col][id]; else T[col][id] = v;
+  save();
+}
+
+/* ----- Sincronización opcional con Google Sheets ----- */
+function queue(item){
+  if (!syncURL()) return;
+  DB.sync.pending = DB.sync.pending.filter(x => !(x.id === item.id && x.fecha === item.fecha && x.tipo === item.tipo));
+  DB.sync.pending.push(item); save(); flush();
+}
+let flushing = false;
+async function flush(manual){
+  const url = syncURL();
+  if (!url || flushing || !DB.sync.pending.length) return;
+  flushing = true;
+  let sent = 0, fail = '';
+  for (const item of [...DB.sync.pending]){
+    try {
+      const r = await fetch(url, {method:'POST', body:JSON.stringify(Object.assign({key:syncKey()}, item))});
+      const j = await r.json();
+      if (j.ok){ DB.sync.pending = DB.sync.pending.filter(x => x !== item); sent++; save(); }
+      else { fail = j.error === 'clave' ? 'La clave del equipo no coincide.' : 'El tablero rechazó el registro.'; break; }
+    } catch(e){ fail = 'Sin conexión con el tablero. Se subirá después.'; break; }
+  }
+  flushing = false;
+  if (manual) toast(fail || `${sent} ${sent===1?'registro subido':'registros subidos'}`);
+  if (S.tab === 'equipo'){ render(); if (sent) loadTeam(true); }
+}
+async function loadTeam(force){
+  const url = syncURL(); if (!url) return;
+  if (!force && S.team && Date.now() - S.teamAt < 60000) return;
+  S.teamLoading = true;
+  if (S.tab === 'equipo' && !S.team) render();
+  try {
+    const r = await fetch(`${url}?key=${encodeURIComponent(syncKey())}&semana=${iso(monday(new Date()))}`);
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error);
+    S.team = j.jugadores || []; S.teamAt = Date.now(); S.teamErr = '';
+  } catch(e){ S.teamErr = 'No se pudo cargar el tablero. Revisa tu conexión, la URL o la clave.'; }
+  S.teamLoading = false;
+  if (S.tab === 'equipo') render();
+}
+function saveSyncCfg(){
+  DB.sync.url = $('#sync-url').value.trim();
+  DB.sync.key = $('#sync-key').value.trim();
+  S.team = null; S.teamErr = '';
+  save(); render(); toast('Conexión guardada'); loadTeam(true); flush();
+}
+
+/* ----- Compartir, respaldo ----- */
+async function share(p, mode){
+  const txt = shareText(p);
+  if (mode === 'native' && navigator.share){ try { await navigator.share({text:txt}); } catch(e){} return; }
+  try { await navigator.clipboard.writeText(txt); toast('Texto copiado'); }
+  catch(e){ toast('No se pudo copiar. Selecciona el texto y cópialo.'); }
+}
+function exportData(){
+  const blob = new Blob([JSON.stringify(DB, null, 1)], {type:'application/json'});
+  const a = document.createElement('a');
+  const p = P();
+  a.href = URL.createObjectURL(blob);
+  a.download = `plan-futbol-${(p ? p.name : 'respaldo').toLowerCase().replace(/[^a-z0-9]+/g,'-')}-${todayISO()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast('Respaldo descargado');
+}
+function importFile(file){
+  if (!file) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      const d = JSON.parse(fr.result);
+      if (!d || typeof d.profiles !== 'object') throw new Error('formato');
+      let n = 0;
+      Object.values(d.profiles).forEach(pr => { if (pr && pr.id && pr.pos && pr.level){ pr.logs = pr.logs || {}; pr.tests = pr.tests || {}; DB.profiles[pr.id] = pr; n++; } });
+      if (!n) throw new Error('vacío');
+      if (!P()) DB.active = d.active && DB.profiles[d.active] ? d.active : Object.keys(DB.profiles)[0];
+      save(); render(); toast(`Respaldo cargado: ${n} ${n===1?'perfil':'perfiles'}`);
+    } catch(e){ toast('Ese archivo no es un respaldo de esta app.'); }
+  };
+  fr.readAsText(file);
+}
+
+/* ----- Reloj de descanso ----- */
+const T = {end:0, total:0, int:null, ctx:null};
+function beep(){
+  try {
+    const ctx = T.ctx; if (!ctx) return;
+    [0, .22, .44].forEach(o => {
+      const os = ctx.createOscillator(), g = ctx.createGain();
+      os.frequency.value = 880; os.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(.0001, ctx.currentTime + o);
+      g.gain.exponentialRampToValueAtTime(.25, ctx.currentTime + o + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + o + .18);
+      os.start(ctx.currentTime + o); os.stop(ctx.currentTime + o + .2);
+    });
+  } catch(e){}
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+}
+function startTimer(sec){
+  try { T.ctx = T.ctx || new (window.AudioContext || window.webkitAudioContext)(); if (T.ctx.state === 'suspended') T.ctx.resume(); } catch(e){}
+  T.total = sec; T.end = Date.now() + sec*1000;
+  const el = $('#timer'); el.hidden = false; el.classList.remove('fin'); document.body.classList.add('timing');
+  $('#t-lab').textContent = 'Descanso';
+  clearInterval(T.int); T.int = setInterval(tick, 250); tick();
+}
+function tick(){
+  const left = Math.max(0, Math.ceil((T.end - Date.now())/1000));
+  $('#t-num').textContent = `${Math.floor(left/60)}:${pad(left%60)}`;
+  $('#t-bar i').style.width = `${T.total ? (left/T.total)*100 : 0}%`;
+  if (left <= 0){
+    clearInterval(T.int); T.int = null;
+    const el = $('#timer'); el.classList.add('fin'); $('#t-lab').textContent = 'A la siguiente serie';
+    beep();
+    setTimeout(() => { if (!T.int){ el.hidden = true; document.body.classList.remove('timing'); } }, 4000);
+  }
+}
+function stopTimer(){ clearInterval(T.int); T.int = null; $('#timer').hidden = true; document.body.classList.remove('timing'); }
+
+/* ----- Pantalla encendida ----- */
+async function toggleWake(){
+  try {
+    if (S.wake){ await S.wake.release(); S.wake = null; }
+    else { S.wake = await navigator.wakeLock.request('screen'); S.wake.addEventListener('release', () => { S.wake = null; }); }
+  } catch(e){ toast('Este teléfono no permite mantener la pantalla encendida.'); S.wake = null; }
+  render();
+}
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState === 'visible' && S.wakeWanted && !S.wake){ try { S.wake = await navigator.wakeLock.request('screen'); } catch(e){} }
+});
+
+/* ===================== Eventos ===================== */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-a]');
+  if (!t){ if (e.target.id === 'sheet') closeSheet(); return; }
+  const a = t.dataset.a, p = P();
+  switch (a){
+    case 'tab': S.tab = t.dataset.t; if (S.tab === 'hoy') S.sel = S.sel || todayISO(); render(); scrollTo(0,0); if (S.tab === 'equipo'){ loadTeam(); flush(); } break;
+    case 'day': S.sel = t.dataset.d; S.tab = 'hoy'; render(); scrollTo(0,0); break;
+    case 'wk': S.sel = iso(addDays(parse(S.sel), 7 * +t.dataset.n)); render(); break;
+    case 'today': S.sel = todayISO(); render(); break;
+    case 'box': toggleBox(p, t); break;
+    case 'timer': startTimer(+t.dataset.s); break;
+    case 't-add': T.end += 15000; T.total += 15; if (!T.int){ $('#timer').classList.remove('fin'); T.int = setInterval(tick, 250); } tick(); break;
+    case 't-stop': stopTimer(); break;
+    case 'ex': openEx(t.dataset.id); break;
+    case 'close': closeSheet(); break;
+    case 'ready': setReady(p, t.dataset.f, +t.dataset.v); break;
+    case 'rpe': setRpe(p, +t.dataset.v); break;
+    case 'save': saveSession(p, t.dataset.type); break;
+    case 'pick': S.setup[t.dataset.f] = t.dataset.v; S.err = ''; render(); break;
+    case 'create': createProfile(); break;
+    case 'cancel-setup': S.adding = false; S.setup = null; S.err = ''; render(); break;
+    case 'profile': openSheet(profileSheet(p)); break;
+    case 'save-profile': saveProfile(p); break;
+    case 'switch': DB.active = t.dataset.id; save(); closeSheet(); S.sel = todayISO(); render(); toast(`Hola, ${P().name}`); break;
+    case 'add-profile': closeSheet(); S.adding = true; S.setup = newDraft(); render(); scrollTo(0,0); break;
+    case 'del-profile':
+      if (!S.delArm){ S.delArm = true; t.textContent = 'Toca otra vez para borrar todo'; return; }
+      deleteProfile(p); break;
+    case 'goto-tests': S.tab = 'progreso'; render(); setTimeout(() => { const el = $('#tests'); if (el) el.scrollIntoView({behavior:'smooth'}); }, 60); break;
+    case 'share': share(p, t.dataset.m); break;
+    case 'team-refresh': loadTeam(true); flush(); toast('Actualizando…'); break;
+    case 'flush': flush(true); break;
+    case 'sync-save': saveSyncCfg(); break;
+    case 'export': exportData(); break;
+    case 'import': $('#imp').click(); break;
+    case 'wake': S.wakeWanted = !S.wake; toggleWake(); break;
+  }
+});
+document.addEventListener('change', e => {
+  const t = e.target, p = P();
+  if (t.dataset.tog === 'light'){ const L = getLog(p, S.sel, true); L.light = t.checked; L.lightTouched = true; save(); render(); }
+  else if (t.dataset.tog === 'comp'){ const L = getLog(p, S.sel, true); L.comp = t.checked; save(); render(); }
+  else if (t.dataset.test){ setTest(p, t.dataset.test, t.dataset.col, t.value); render(); }
+  else if (t.id === 'imp'){ importFile(t.files[0]); t.value = ''; }
+  else if (t.dataset.su){ S.setup[t.dataset.su] = t.type === 'checkbox' ? t.checked : t.value; }
+});
+document.addEventListener('input', e => {
+  const t = e.target, p = P();
+  if (t.dataset.su && t.type !== 'checkbox') S.setup[t.dataset.su] = t.value;
+  else if (t.dataset.log){ const L = getLog(p, S.sel, true); L[t.dataset.log] = t.type === 'number' ? (t.value === '' ? null : +t.value) : t.value; save(); }
+  else if (t.id === 'exsearch'){
+    const q = t.value.trim().toLowerCase();
+    document.querySelectorAll('#lib li').forEach(li => { li.hidden = q && !li.dataset.name.includes(q); });
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
+window.addEventListener('online', () => flush());
+window.addEventListener('storage', e => { if (e.key === KEY){ DB = load(); render(); } });
+
+render();
+flush();
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
